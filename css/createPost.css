@@ -1,0 +1,47 @@
+
+body{
+    background: linear-gradient(-45deg,#3d71c4, #dae9f0);
+    background-size: 400% 400%; 
+    animation: gradient 15s ease infinite; 
+}
+.title{ 
+    font-size: 27px; 
+    text-align: center; 
+    font-family: Arial;
+}
+
+
+
+#wrap {
+    float: left; 
+    position: relative; 
+    left: 50%; 
+}
+
+#content {
+    float: left; 
+    position: relative; 
+    left: -50%; 
+    font-family: Arial; 
+    font-size: 20px; 
+}
+
+input[type=submit] { 
+     background:#2b16a2;
+     color:#fff;
+     border:1pxsolid#eee;
+     border-radius:20px;
+     box-shadow:5px5px5px#eee;
+     text-shadow:none;
+}
+.button {
+  background-color: #2b16a2; /* Green */
+  border:1pxsolid#eee;
+  color: white;
+  border-radius:20px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+}
+
+
