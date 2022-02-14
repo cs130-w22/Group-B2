@@ -1,0 +1,69 @@
+#filter {
+  background-color: yellow;
+  float: left;
+}
+
+#catalog {
+  float: left;
+  position:relative; 
+  left: 50px;
+  width: 60%;
+  height: 500px;
+  border-style: solid;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#divCatalog {
+  visibility: hidden;
+}
+
+#divLoading {
+  position: relative;
+  left: 44%;
+  top: 38%;
+  visibility: hidden;
+}
+
+#loadingImg {
+  width: 100px;
+  height: 100px;
+}
+
+#itemList, .infoList {
+  list-style: none;
+}
+
+.split {
+  display: flex;
+}
+
+.split.left {
+  flex: 1;
+}
+.split.right {
+  flex: 1;
+}
+
+#img {
+  width:100px;
+  height:200px;
+}
+
+h1 {
+  text-align: center;
+}
+
+#nav {
+  background-color: yellow; 
+  list-style-type: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+#nav li {
+  display: inline-block;
+  font-size: 20px;
+  padding: 20px;
+}
