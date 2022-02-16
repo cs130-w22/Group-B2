@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+  }
+/* Add a gray background color with some padding */
+body {
+    background: #F2F2F2;
+    margin: 0;
+  }
+  :root {
+    --primary-color: #2D68C4;
+    --secondary-color: #F2A900;
+  }
+  .navbar {
+    background: white;
+    padding: 1em;
+  }
+  
+  .navbar .logo {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.2em;
+  }
+  
+  .navbar .logo span {
+    color: var(--secondary-color);
+  }
+  .primary-nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    background: none;
+    position: unset;
+    height: auto;
+    width: 100%;
+    padding: .5em .5em;
+  }
+  
+  .primary-nav ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  
+  .primary-nav a {
+    color: blue;
+    font-size: 1em;
+    padding: .1em 1em;
+    text-decoration: none;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Create two unequal columns that floats next to each other */
+  /* Left column */
+  .leftcolumn {   
+    float: left;
+    width: 75%;
+  }
+  
+  /* Right column */
+  .rightcolumn {
+    float: left;
+    width: 25%;
+    padding-left: 20px;
+  }
+  
+  /* Fake image */
+  .fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Add a card effect for articles */
+  .card {
+     background-color:white;
+     padding: 20px;
+     margin-top: 20px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+  
+  
+  /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 800px) {
+    .leftcolumn, .rightcolumn {   
+      width: 100%;
+      padding: 0;
+    }
+  }
