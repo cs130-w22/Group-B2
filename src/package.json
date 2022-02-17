@@ -24,7 +24,7 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "testRegex": "./js/test/.*.js$",
+    "testRegex": "./test/.*.js$",
     "rootDir": ".",
     "preset": "ts-jest",
     "transform": {
