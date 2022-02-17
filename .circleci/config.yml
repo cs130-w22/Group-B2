@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.0
 jobs:
-  install:
+  init:
     docker:
       - image: 'cimg/base:stable'
     steps:
@@ -11,14 +11,17 @@ jobs:
           install-yarn: true
           node-version: '16.14'
       - run: node --version
+      - run:
+          name: "Init env file"
+          command: echo $REGION; echo $ACCESS_ID; echo $ACCESS_KEY; echo $ENDPOINT > ~/project/.env
 
 workflows:
   test_my_app:
     jobs:
-      - install
+      - init
       - node/run:
           npm-run: build
           app-dir: ~/project/src
       - node/test:
           test-results-for: jest
-          app-dir: ~/project/src
+          app-dir: ~/project/src/js/test
