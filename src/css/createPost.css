@@ -71,7 +71,7 @@ ul {
     left: -50%; 
     font-family: Arial; 
 }
-.title{
+#title{
     font-size: 25px;
 }
 .createPost{
@@ -86,7 +86,7 @@ input[type=submit] {
      border-radius:30px;
      box-shadow:5px5px5px#eee;
      text-shadow:none;
-     font-size: 20px;
+     font-size: 14px;
      position: center; 
 
 }
