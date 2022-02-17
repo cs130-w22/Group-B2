@@ -16,7 +16,7 @@ jobs:
           command: echo $"${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}" > ./src/.env
       - run:
           name: "read file"
-          command: while read line; do echo $line; done < ./src/.env 
+          command: cat ./src/.env 
 
 workflows:
   test_my_app:
