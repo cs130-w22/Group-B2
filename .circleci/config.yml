@@ -12,8 +12,11 @@ jobs:
           node-version: '16.14'
       - run: node --version
       - run:
+          name: init string
+          command: p="${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}"
+      - run:
           name: "Init env file"
-          command: echo $"${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}" > ./src/.env
+          command: echo "${p}" > ./src/.env
       - run:
           name: "read file"
           command: if [ ! -f ./src/.env ]; then echo "File not found!"; else echo "file found"; fi
