@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
   build:
-    working_directory: ~/repo/project/src
+    working_directory: ~/repo
     docker:
       - image: circleci/node:10.16.3
     steps:
@@ -15,7 +15,7 @@ jobs:
             - ./node_modules
       - run:
           name: Run tests
-          command: npm run test
+          command: ls
 workflows:
   version: 2
   one_and_two: # this is the name of our workflow
