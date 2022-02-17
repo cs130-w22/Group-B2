@@ -17,6 +17,7 @@ workflows:
     jobs:
       - install
       - node/run:
+          npm-run: build
           app-dir: ~/project/src
       - node/test:
           app-dir: ~/project/src
