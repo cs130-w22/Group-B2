@@ -15,6 +15,9 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: pwd
+          command: pwd
+      - run:
           name: Directories
           command: ls
       - run:
