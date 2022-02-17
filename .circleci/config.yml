@@ -16,5 +16,5 @@ workflows:
   test_my_app:
     jobs:
       - build
-      - node/run:
+      - node/test:
           app-dir: ~/project/src
