@@ -13,16 +13,16 @@ jobs:
       - run: node --version
       - run:
           name: cd
-          command: cd ./src/.env
+          command: cd ./src
       - run:
           name: init string
           command: p="${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}"
       - run:
           name: "Init env file"
-          command: echo "${p}" > ./src/.env
+          command: echo "${p}" > .env
       - run:
           name: "read file"
-          command: if [ ! -f ./src/.env ]; then echo "File not found!"; else echo "file found"; fi
+          command: if [ ! -f .env ]; then echo "File not found!"; else echo "file found"; fi
       - run:
           name: pwd
           command: pwd
