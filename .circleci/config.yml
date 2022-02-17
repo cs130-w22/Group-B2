@@ -13,7 +13,7 @@ jobs:
       - run: node --version
       - run:
           name: cd
-          command: cd ./src
+          command: cd ~/project/src
       - run:
           name: init string
           command: p="${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}"
