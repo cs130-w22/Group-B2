@@ -5,17 +5,17 @@ jobs:
   init:
     docker:
       - image: 'cimg/base:stable'
+      environment:
+          ACCESS_ID: $ACCESS_ID
+          ACCESS_KEY: $ACCESS_KEY
+          ENDPOINT: $ENDPOINT
+          REGION: $REGION
     steps:
       - checkout
       - node/install:
           install-yarn: true
           node-version: '16.14'
       - run: node --version
-      - environment:
-          ACCESS_ID: $ACCESS_ID
-          ACCESS_KEY: $ACCESS_KEY
-          ENDPOINT: $ENDPOINT
-          REGION: $REGION
 
 workflows:
   test_my_app:
