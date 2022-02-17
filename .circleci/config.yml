@@ -11,24 +11,11 @@ jobs:
           install-yarn: true
           node-version: '16.14'
       - run: node --version
-      - run:
-          name: cd
-          command: cd ~/project/src
-      - run:
-          name: init string
-          command: p="${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}"
-      - run:
-          name: "Init env file"
-          command: echo "${p}" > .env
-      - run:
-          name: "read file"
-          command: if [ ! -f .env ]; then echo "File not found!"; else echo "file found"; fi
-      - run:
-          name: pwd
-          command: pwd
-      - run:
-          name: build
-          command: npm run build
+      - environment:
+          ACCESS_ID: $ACCESS_ID
+          ACCESS_KEY: $ACCESS_KEY
+          ENDPOINT: $ENDPOINT
+          REGION: $REGION
 
 workflows:
   test_my_app:
