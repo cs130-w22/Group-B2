@@ -10,7 +10,8 @@ jobs:
       - node/install:
           install-yarn: true
           node-version: '16.14'
-      - node/install-packages
+      - node/install-packages:
+          app-dir: ~/project/src
       - run:
           command: npm run test
 
