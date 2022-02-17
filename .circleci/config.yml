@@ -1,17 +1,9 @@
-# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-orbs:
-  node: circleci/node@4.1.0
-workflows:
-  sample:
-    jobs:
-      - node/test:
-          app-dir: "~/project/src"
-
 jobs:
   build:
+    working_directory: ~/repo/project/src
     docker:
-      - image: circleci/node:10.16.3
+      - image: circleci/node:16.14.0
     steps:
       - checkout
       - run:
@@ -22,11 +14,10 @@ jobs:
           paths:
             - ./node_modules
       - run:
-          name: pwd
-          command: pwd
-      - run:
-          name: Directories
-          command: ls
-      - run:
-          name: Run build
-          command: npm run build
+          name: Run tests
+          command: npm run test
+workflows:
+  version: 2
+  one_and_two: # this is the name of our workflow
+    jobs: # and here we list the jobs we are going to run.
+      - build
