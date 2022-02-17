@@ -16,7 +16,7 @@ jobs:
           command: echo $"${REGION}\n${ACCESS_ID}\n${ACCESS_KEY}\n${ENDPOINT}" > ./src/.env
       - run:
           name: "read file"
-          command: echo $REGION
+          command: [ -e "./src/.env" ] && echo 1 || echo 0
 
 workflows:
   test_my_app:
