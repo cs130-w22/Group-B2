@@ -1,4 +1,4 @@
-const { createTag } = require('../catalog.js');
+const { createTag } = require('../js/catalog.js');
 
 test("Testing tag creation...", () => {
     const testTag = createTag('tagName', 'className', 'id');

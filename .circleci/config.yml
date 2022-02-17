@@ -22,5 +22,4 @@ workflows:
     jobs:
       - init
       - node/test:
-          test-results-for: jest
           app-dir: ~/project/src
