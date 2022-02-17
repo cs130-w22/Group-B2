@@ -10,14 +10,11 @@ jobs:
       - node/install:
           install-yarn: true
           node-version: '16.14'
-      - run: node --version
+      - run: npm run build
 
 workflows:
   test_my_app:
     jobs:
       - install
-      - node/run:
-          npm-run: build
-          app-dir: ~/project/src
       - node/test:
           app-dir: ~/project/src
