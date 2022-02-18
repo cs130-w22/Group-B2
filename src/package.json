@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "browserify js/catalog.js -t [ @sethvincent/dotenvify --path ./.env ] > js/bundle.js"
+    "build": "browserify js/catalog.js js/dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundle.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1073.0",
-    "dotenv": "^16.0.0"
+    "browserify": "^17.0.0",
+    "dotenv": "^16.0.0",
+    "esmify": "^2.1.1"
   },
   "devDependencies": {
     "@sethvincent/dotenvify": "^1.0.4"
