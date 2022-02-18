@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "browserify js/catalog.js js/dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundle.js"
+    "build": "browserify js/catalog.js js/dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundle.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -12,9 +13,25 @@
     "aws-sdk": "^2.1073.0",
     "browserify": "^17.0.0",
     "dotenv": "^16.0.0",
-    "esmify": "^2.1.1"
+    "esmify": "^2.1.1",
+    "jest": "^27.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
     "@sethvincent/dotenvify": "^1.0.4"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-transform-regenerator"
+    ],
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testRegex": "./test/.*.js$",
+    "rootDir": "."
   }
 }

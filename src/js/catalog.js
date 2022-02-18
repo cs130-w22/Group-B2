@@ -8,7 +8,6 @@ window.onload = function() {
 	filterButton.addEventListener("click", onClickFilter, false);
 
 	docClient = new Dynamo();
-	console.log(docClient)
 }
 
 async function onClickFilter() {
@@ -64,7 +63,7 @@ function updateTable(divCatalog, listOfProducts) {
 	divCatalog.style.visibility = 'visible';
 }
 
-function createTag(tagName, className, idName) {
+export function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {
 		tag.className = className;
