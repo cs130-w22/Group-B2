@@ -3,14 +3,61 @@ body{
     background: linear-gradient(-45deg,#3d71c4, #dae9f0);
     background-size: 400% 400%; 
     animation: gradient 15s ease infinite; 
-}
-.title{ 
-    font-size: 27px; 
-    text-align: center; 
-    font-family: Arial;
+    margin: 0;
 }
 
+:root {
+  --primary-color: #2D68C4;
+  --secondary-color: #F2A900;
+}
+.navbar {
+  background: white;
+  padding: 1em;
+}
 
+.navbar .logo {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--primary-color);
+  font-size: 1.2em;
+}
+
+.navbar .logo span {
+  color: var(--secondary-color);
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.primary-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: none;
+  position: unset;
+  height: auto;
+  width: 100%;
+  padding: .5em .5em;
+} 
+
+.primary-nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.primary-nav a {
+  color: blue;
+  font-size: 1em;
+  padding: .1em 1em;
+  text-decoration: none;
+}
 
 #wrap {
     float: left; 
@@ -23,25 +70,27 @@ body{
     position: relative; 
     left: -50%; 
     font-family: Arial; 
-    font-size: 20px; 
+}
+#title{
+    font-size: 25px;
+}
+.createPost{
+    font-size: 15px; 
 }
 
+
 input[type=submit] { 
-     background:#2b16a2;
+     background:#2D68C4;
      color:#fff;
      border:1pxsolid#eee;
-     border-radius:20px;
+     border-radius:30px;
      box-shadow:5px5px5px#eee;
      text-shadow:none;
+     font-size: 14px;
+     position: center; 
+
 }
-.button {
-  background-color: #2b16a2; /* Green */
-  border:1pxsolid#eee;
-  color: white;
-  border-radius:20px;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-}
+
+
 
 

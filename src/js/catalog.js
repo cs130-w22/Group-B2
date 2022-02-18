@@ -29,7 +29,6 @@ function updateTable(divCatalog, listOfProducts) {
 
 	divCatalog.innerHTML = '';
 	listOfProducts.forEach(function(item) {
-		console.log(item);
 		let leftTag = createTag('div', 'left', null);
 		let rightTag = createTag('div', 'right', null);
 		let liTag = createTag('li', 'split', null);
@@ -40,7 +39,6 @@ function updateTable(divCatalog, listOfProducts) {
 					"Seller: " + item['Seller Name'], 
 					"Location: " + item['Location'], 
 					"Cost: " + item['Cost']]
-		console.log(info);
 
 		for (let i = 0; i < info.length; i++) {
 			let liTag = createTag('li', null, null);
