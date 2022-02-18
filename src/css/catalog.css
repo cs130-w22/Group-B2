@@ -50,20 +50,81 @@
   height:200px;
 }
 
-h1 {
-  text-align: center;
+:root {
+  --primary-color: #2D68C4;
+  --secondary-color: #F2A900;
 }
 
-#nav {
-  background-color: yellow; 
+.navbar {
+  background: white;
+  padding: 1em;
+}
+
+.navbar .logo {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--primary-color);
+  font-size: 1.2em;
+}
+
+.navbar .logo span {
+  color: var(--secondary-color);
+}
+
+ul {
   list-style-type: none;
-  text-align: center;
   margin: 0;
   padding: 0;
 }
 
-#nav li {
-  display: inline-block;
-  font-size: 20px;
-  padding: 20px;
+.hero .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-align: left;
+}
+
+.hero .container .left-col {
+  margin: 3em 3em 3em 5em;
+}
+
+.hero .container .left-col h1 {
+  font-size: 1.3em;
+  width: 90%;
+}
+
+.hero .container .right-col {
+  margin: 3em 3em 0 5em;
+  position: center;
+  font-size: 1.2em;
+}
+
+.primary-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: none;
+  position: unset;
+  height: auto;
+  width: 100%;
+  padding: .5em .5em;
+}
+
+.primary-nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.primary-nav a {
+  color: blue;
+  font-size: 1em;
+  padding: .1em 1em;
+  text-decoration: none;
 }
