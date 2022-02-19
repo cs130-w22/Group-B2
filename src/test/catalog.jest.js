@@ -13,5 +13,4 @@ test("Testing tag creation data-less...", () => {
     expect(testTag).toBeInstanceOf(Element);
     expect(testTag.tagName).toBe("NULL");
     expect(testTag.className).toBe("");
-    expect(testTag.id).toBe("");
 })

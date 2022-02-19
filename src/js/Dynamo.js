@@ -33,7 +33,6 @@ export class Dynamo {
         let params = this.makeParam(tableName, indexName, attrName, attrVal);
         try {
             const resp = this.client.query(params).promise();
-            console.log("Query succeeded.");
             return resp;
         } catch (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));

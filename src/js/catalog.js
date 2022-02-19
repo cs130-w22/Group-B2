@@ -19,7 +19,7 @@ async function onClickFilter() {
 	divLoading.style.visibility = 'visible';
 
 	const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
-
+	console.log(resp)
 	divLoading.style.visibility = 'hidden';
 	updateTable(divCatalog, resp.Items);
 }
