@@ -8,7 +8,6 @@ window.onload = function() {
 	filterButton.addEventListener("click", onClickFilter, false);
 
 	docClient = new Dynamo();
-	console.log(docClient)
 }
 
 async function onClickFilter() {
@@ -20,7 +19,7 @@ async function onClickFilter() {
 	divLoading.style.visibility = 'visible';
 
 	const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
-
+	console.log(resp)
 	divLoading.style.visibility = 'hidden';
 	updateTable(divCatalog, resp.Items);
 }
@@ -64,7 +63,7 @@ function updateTable(divCatalog, listOfProducts) {
 	divCatalog.style.visibility = 'visible';
 }
 
-function createTag(tagName, className, idName) {
+export function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {
 		tag.className = className;
