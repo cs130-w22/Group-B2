@@ -8,7 +8,7 @@ window.onload = function() {
 	filterButton.addEventListener("click", onClickFilter, false);
 
 	docClient = new Dynamo();
-	console.log(docClient);
+	console.log(window.location);
 }
 
 async function onClickFilter() {
