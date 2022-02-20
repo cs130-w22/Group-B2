@@ -6,21 +6,16 @@ dotenv.config();
 var region = "us-west-1";
 
 AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  accessSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: region
 });
 
 export class Dynamo {
     constructor() {
-        AWS.config.getCredentials(function(err) {
-            if (err) console.log(err.stack);
-            // credentials not loaded
-            else {
-              console.log("Access key:", AWS.config.credentials.accessKeyId);
-            }
-        });
         this.client = new AWS.DynamoDB() //low-level client
 
-        //this.client = daxClient != null ? daxClient : ddbClient;
+        //his.client = daxClient != null ? daxClient : ddbClient;
     }
 
     makeParam(tableName, indexName, attrName, attrVal) {
