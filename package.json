@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "browserify js/catalog.js js/Dynamo.js -p esmify > bundle/bundle.js",
+    "build": "browserify js/catalog.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundle.js",
     "test": "jest"
   },
   "keywords": [],
