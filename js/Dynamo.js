@@ -11,9 +11,16 @@ AWS.config.update({
 
 export class Dynamo {
     constructor() {
+        AWS.config.getCredentials(function(err) {
+            if (err) console.log(err.stack);
+            // credentials not loaded
+            else {
+              console.log("Access key:", AWS.config.credentials.accessKeyId);
+            }
+        });
         this.client = new AWS.DynamoDB() //low-level client
 
-        //his.client = daxClient != null ? daxClient : ddbClient;
+        //this.client = daxClient != null ? daxClient : ddbClient;
     }
 
     makeParam(tableName, indexName, attrName, attrVal) {
