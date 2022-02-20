@@ -1,29 +1,17 @@
 const AmazonDaxClient = require('amazon-dax-client');
 var AWS = require("aws-sdk");
-require('dotenv').config()
-
-const result = dotenv.config()
-
-if (result.error) {
-  throw result.error
-}
-
-console.log(result.parsed)
-
-var region = "us-west-1";
-
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  accessSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: region
-});
+var dotenv = require("dotenv");
+dotenv.config();
 
 export class Dynamo {
     constructor() {
-        console.log(process.env.AWS_ACCESS_KEY_ID);
-        this.client = new AWS.DynamoDB() //low-level client
-
-        //his.client = daxClient != null ? daxClient : ddbClient;
+        AWS.config.update({
+            region: process.env.REGION,
+            accessKeyId: process.env.ACCESS_ID,
+            secretAccessKey: process.env.ACCESS_KEY,
+            endpoint: process.env.ENDPOINT
+        });
+        this.client = new AWS.DynamoDB();
     }
 
     makeParam(tableName, indexName, attrName, attrVal) {
