@@ -11,7 +11,7 @@ export class Dynamo {
             secretAccessKey: process.env.ACCESS_KEY,
             endpoint: process.env.ENDPOINT
         });
-        this.client = new AWS.DynamoDB();
+        this.client = new AWS.DynamoDB.DocumentClient();
     }
 
     makeParam(tableName, indexName, attrName, attrVal) {
@@ -23,7 +23,7 @@ export class Dynamo {
                 "#val": attrName
             },
             ExpressionAttributeValues: {
-                ":val": { "S" : attrVal }
+                ":val": attrVal
             }
         };
     
