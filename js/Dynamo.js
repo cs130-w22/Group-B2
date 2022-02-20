@@ -1,7 +1,14 @@
 const AmazonDaxClient = require('amazon-dax-client');
 var AWS = require("aws-sdk");
-var dotenv = require("dotenv");
-dotenv.config();
+require('dotenv').config()
+
+const result = dotenv.config()
+
+if (result.error) {
+  throw result.error
+}
+
+console.log(result.parsed)
 
 var region = "us-west-1";
 
