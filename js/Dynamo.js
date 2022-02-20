@@ -11,16 +11,9 @@ AWS.config.update({
 
 export class Dynamo {
     constructor() {
-        var ddbClient = new AWS.DynamoDB.DocumentClient()
-        var daxClient = null;
+        this.client = new AWS.DynamoDB() //low-level client
 
-        if (process.argv.length > 2) {
-            var dax = new AmazonDaxClient({endpoints: [process.argv[2]], region: region})
-            daxClient = new AWS.DynamoDB.DocumentClient({service: dax });
-        }
-
-        this.client = daxClient != null ? daxClient : ddbClient;
-        //this.client = new AWS.DynamoDB();
+        //his.client = daxClient != null ? daxClient : ddbClient;
     }
 
     makeParam(tableName, indexName, attrName, attrVal) {
