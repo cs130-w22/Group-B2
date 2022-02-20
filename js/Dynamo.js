@@ -13,6 +13,7 @@ AWS.config.update({
 
 export class Dynamo {
     constructor() {
+        console.log(process.env.AWS_ACCESS_KEY_ID);
         this.client = new AWS.DynamoDB() //low-level client
 
         //his.client = daxClient != null ? daxClient : ddbClient;
