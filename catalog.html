@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="css/catalog.css">
 	<script type="text/javascript" src="./bundle/bundle.js"></script>
 </head>
-<body>
+<body id="background">
 	<div class="navbar">
 		<div class="container">
 			<a class="logo" href="#">UCLA<span>FreeAndForSale</span></a>
@@ -22,14 +22,11 @@
 		<p>
 			<label for="items">Items:</label>
 			<select id="items" name="items">
+				<option value="SELECT" disabled selected>Product Type</option>
 				<option value="FUR">Furniture</option>
 				<option value="KS">Kitchen Supplies</option>
 				<option value="ELE">Electronics</option>
 			</select>
-		</p>
-		<p> 
-			<label for="radius">Radius (km):</label>
-			<input type="range" id="radius" name="radius" min="50" max="500">
 		</p>
 		<button type="button" id="filterButton">Filter</button>
 	</div>

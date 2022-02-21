@@ -13,28 +13,30 @@ window.onload = function() {
 
 async function onClickFilter() {
 	var productType = document.getElementById("items");
-	let divCatalog = document.getElementById("divCatalog");
-	var divLoading = document.getElementById("divLoading");
+	if (productType.value != "SELECT") {
+		let divCatalog = document.getElementById("divCatalog");
+		var divLoading = document.getElementById("divLoading");
 
-	divCatalog.innerHTML = '';
-	divLoading.style.visibility = 'visible';
+		divCatalog.innerHTML = '';
+		divLoading.style.visibility = 'visible';
 
-	const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
-	console.log(resp)
-	divLoading.style.visibility = 'hidden';
-	updateTable(divCatalog, resp.Items);
+		const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
+		console.log(resp)
+		divLoading.style.visibility = 'hidden';
+		updateTable(divCatalog, resp.Items);
+	}
 }
 
 function updateTable(divCatalog, listOfProducts) {
-	let ulTagItem = createTag('ul', null, 'itemList');
+	let ulCatalogTag = createTag('ul', null, 'ulCatalog');
 
 	divCatalog.innerHTML = '';
 	listOfProducts.forEach(function(item) {
-		let leftTag = createTag('div', 'left', null);
-		let rightTag = createTag('div', 'right', null);
-		let liTag = createTag('li', 'split', null);
-		let imgTag = createTag('img', null, 'img');
-		let ulTagInfo = createTag('ul', 'infoList', null);
+		let liCatalogTag = createTag('li', null, 'idCatalog');
+		let divCatalogTag = createTag('div', null, 'divCatalog');
+		let divLeftTag = createTag('div', null, 'left');
+		let divRightTag = createTag('div', null, 'right');
+		let ulProductInfoTag = createTag('ul', null, 'productInfo');
 
 		let info = ["Product: " + item['Product'], 
 					"Seller: " + item['Seller Name'], 
@@ -42,25 +44,28 @@ function updateTable(divCatalog, listOfProducts) {
 					"Cost: " + item['Cost']]
 
 		for (let i = 0; i < info.length; i++) {
-			let liTag = createTag('li', null, null);
+			let liTag = createTag('li', null, "liStyle");
 			liTag.innerHTML = info[i];
-			ulTagInfo.appendChild(liTag);
+			ulProductInfoTag.appendChild(liTag);
 		}
 
 		let ahref = createTag('a', null, null);
+		let imgTag = createTag('img', null, 'productImage');
 		ahref.href = '#';
-		imgTag.src = "img/chair.jpeg";
+		imgTag.src = "/img/chair.jpeg";
 		ahref.appendChild(imgTag);
-		leftTag.appendChild(ahref);
-		rightTag.appendChild(ulTagInfo);
+		divLeftTag.appendChild(ahref);
+		divRightTag.appendChild(ulProductInfoTag);
 
-		liTag.appendChild(leftTag);
-		liTag.appendChild(rightTag);
+		divCatalogTag.appendChild(divLeftTag);
+		divCatalogTag.appendChild(divRightTag);
 
-		ulTagItem.appendChild(liTag);
+		liCatalogTag.appendChild(divCatalogTag);
+
+		ulCatalogTag.appendChild(liCatalogTag);
 	});
 
-	divCatalog.appendChild(ulTagItem);
+	divCatalog.appendChild(ulCatalogTag);
 	divCatalog.style.visibility = 'visible';
 }
 
