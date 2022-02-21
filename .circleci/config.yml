@@ -17,4 +17,4 @@ workflows:
     jobs:
       - build
       - node/test:
-          app-dir: ~/project/src
+          app-dir: ~/project
