@@ -1,4 +1,3 @@
-const AmazonDaxClient = require('amazon-dax-client');
 var AWS = require("aws-sdk");
 var dotenv = require("dotenv");
 dotenv.config();
@@ -14,7 +13,7 @@ export class Dynamo {
         this.client = new AWS.DynamoDB.DocumentClient();
     }
 
-    makeParam(tableName, indexName, attrName, attrVal) {
+    makeQueryParam(tableName, indexName, attrName, attrVal) {
         let params = {
             TableName : tableName,
             IndexName: indexName,
@@ -30,10 +29,70 @@ export class Dynamo {
         return params;
     }
 
+    makeGetUserParam(tableName, userID) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "UserID": userID
+            }
+        };
+    
+        return params;
+    }
+
+    makeGetProductParam(tableName, productID) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "ProductID": productID
+            }
+        };
+    
+        return params;
+    }
+
     queryTable(tableName, indexName, attrName, attrVal) {
-        let params = this.makeParam(tableName, indexName, attrName, attrVal);
+        let params = this.makeQueryParam(tableName, indexName, attrName, attrVal);
         try {
             const resp = this.client.query(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    getTableEntry(tableName, key, val) {
+        let params = null;
+        if (key == "UserID") {
+            params = this.makeGetUserParam(tableName, val);
+        } else if (key == "ProductID") {
+            params = this.makeGetProductParam(tableName, val);
+        }
+        try {
+            const resp = this.client.get(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    putTable() {
+        console.log("... into putTable func");
+        var params = {
+            TableName: 'ProductCatalog',
+            Item: {
+                ProductID: 'pid2',
+                Cost: '100',
+                UserID: 'cookies',
+                Location: 'cookies',
+                Product: 'pname',
+                ImageID: 'iid',
+                ProductType: 'pcategory',
+                SellerName: 'cookies'
+            }
+        };
+        try {
+            const resp = this.client.put(params).promise();
             return resp;
         } catch (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));

@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "browserify js/catalog.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundle.js",
+    "build-catalog": "browserify js/catalog.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCatalog.js",
+    "build-wishlist": "browserify js/wishlist.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleWishlist.js",
+    "build": "npm run build-catalog && npm run build-wishlist",
     "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amazon-dax-client": "^1.2.7",
     "aws-sdk": "^2.1073.0",
     "browserify": "^17.0.0",
     "dotenv": "^16.0.0",

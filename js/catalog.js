@@ -39,7 +39,7 @@ function updateTable(divCatalog, listOfProducts) {
 		let ulProductInfoTag = createTag('ul', null, 'productInfo');
 
 		let info = ["Product: " + item['Product'], 
-					"Seller: " + item['Seller Name'], 
+					"Seller: " + item['SellerName'], 
 					"Location: " + item['Location'], 
 					"Cost: " + item['Cost']]
 
@@ -51,7 +51,7 @@ function updateTable(divCatalog, listOfProducts) {
 
 		let ahref = createTag('a', null, null);
 		let imgTag = createTag('img', null, 'productImage');
-		ahref.href = '#';
+		ahref.href = 'postdes.html?productid=' + item['ProductID'];
 		imgTag.src = "/img/chair.jpeg";
 		ahref.appendChild(imgTag);
 		divLeftTag.appendChild(ahref);
