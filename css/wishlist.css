@@ -1,25 +1,99 @@
-.itemList, .infoList {
-  list-style: none;
-}
+#background{
+  width: auto;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  background: url("../img/loginPageBackground.png");
+  background-size: cover;
+} 
 
-.split {
+#productRow {
   display: flex;
 }
 
-.split.left {
-  flex: 1;
+#first-div {
+  width:25%;
+  height:225px;
+  float:left;
+  position: relative;
+  background-color:rgb(244, 247, 93);
 }
-.split.right {
-  flex: 1;
+
+#productImage {
+  width: 70%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20%;
+}
+
+#second-div {
+  width:60%;
+  height:225px;
+  float:left;
+  background-color:rgb(131, 131, 131);
+}
+
+#productInfo {
+  text-align: center;
+  padding: 15px;
+}
+
+#liStyle {
+  border-radius: 190px;
+  background: #9eb2f3;
+  border: 5px solid #F2A900;
+  padding: 10px;
+  width: 50%;
+  margin: auto;
+}
+
+#third-div {
+  width:15%;
+  height:225px;
+  float:left;
+  background-color:rgb(17, 0, 255);
+}
+
+#removeButton {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-radius: 190px;
+  background: #9eb2f3;
+  border: 5px solid #F2A900;
+  padding: 10px;
+  width: 70%;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#idCatalog {
+  border: 3px solid #000000;;
 }
 
 #wishlist {
   margin: 0 auto;
   width: 75%;
-  height: 500px;
-  border-style: solid;
+  height: 700px;
+  border-radius: 25px;
+  background: #5879e6;
+  border: 10px solid #000000;
   overflow: scroll;
   overflow-x: hidden;
+  position: relative;
+  top: 10px;
+}::-webkit-scrollbar {
+  width: 0; 
+  background: transparent; 
 }
 
 #img {
@@ -27,20 +101,75 @@
   height:200px;
 }
 
-h1 {
-  text-align: center;
+.navbar {
+  background: white;
+  padding: 1em;
 }
 
-#nav {
-  background-color: yellow; 
-  list-style-type: none;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+.navbar .logo {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--primary-color);
+  font-size: 1.2em;
 }
 
-#nav li {
-  display: inline-block;
-  font-size: 20px;
-  padding: 20px;
+.navbar .logo span {
+  color: var(--secondary-color);
+}
+
+.hero .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-align: left;
+}
+
+.hero .container .left-col {
+  margin: 3em 3em 3em 5em;
+}
+
+.hero .container .left-col h1 {
+  font-size: 1.3em;
+  width: 90%;
+}
+
+.hero .container .right-col {
+  margin: 3em 3em 0 5em;
+  position: center;
+  font-size: 1.2em;
+}
+
+.primary-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: none;
+  position: unset;
+  height: auto;
+  width: 100%;
+  padding: .5em .5em;
+}
+
+.primary-nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.primary-nav a {
+  color: blue;
+  font-size: 1em;
+  padding: .1em 1em;
+  text-decoration: none;
+}
+
+:root {
+  --primary-color: #2D68C4;
+  --secondary-color: #F2A900;
 }
