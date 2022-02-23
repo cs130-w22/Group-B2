@@ -92,8 +92,10 @@ export class Dynamo {
             }
         };
         try {
-            const resp = this.client.put(params).promise();
-            return resp;
+            this.client.put(params, function (err, data) {
+                if (err) console.log("error putting table");
+                else console.log("table put!");
+            });
         } catch (err) {
             console.error("unable to put table");
         }
@@ -110,8 +112,11 @@ export class Dynamo {
         };
         
         try {
-            const resp = this.s3.createBucket(params).promise();
-            return resp;
+            this.s3.s3.createBucket(params, function (err, data) {
+                if (err) console.log("error creating bucket"); // an error occurred
+                else console.log("bucket created!");           // successful response
+            
+            });
         } catch (err) {
             console.error("unable to create s3 bucket");
         }
@@ -125,10 +130,12 @@ export class Dynamo {
             Bucket: imageID,
         };
         try{
-            const resp = this.s3.putObject(params).promise();
-            return resp; 
+            this.s3.putObject(params, function (err, data) {
+                if (err) console.log("error putting image"); // an error occurred
+                else console.log("image put!");           // successful response
+            });
         } catch(err) {
-            console.error("unable to put image");
+            console.error("unable to put image: ", JSON.stringify(err, null, 2));
         }
         console.log("... leaving putImage func");
     }

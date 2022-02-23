@@ -29,7 +29,7 @@ async function validatePostCreation() {
         return false;
     } else {
 
-        if (itemCost.indexOf('.') == itemCost.length - 3 || itemCost.indexOf('.') == itemCost.length - 2) {
+        if (itemCost.indexOf('.') == itemCost.length - 3 || itemCost.indexOf('.') == itemCost.length - 2 || itemCost.indexOf('.') == -1) {
             // okay format
             // $x.x
             // $x.xx
