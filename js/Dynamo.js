@@ -81,7 +81,7 @@ export class Dynamo {
         var params = {
             TableName: 'ProductCatalog',
             Item: {
-                ProductID: 'pid2',
+                ProductID: 'pid3',
                 Cost: '100',
                 UserID: 'cookies',
                 Location: 'cookies',

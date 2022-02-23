@@ -5,7 +5,8 @@
   "scripts": {
     "build-catalog": "browserify js/catalog.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCatalog.js",
     "build-wishlist": "browserify js/wishlist.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleWishlist.js",
-    "build": "npm run build-catalog && npm run build-wishlist",
+    "build-createPost": "browserify js/createPost.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCreatePost.js",
+    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost",
     "test": "jest"
   },
   "keywords": [],
