@@ -29,7 +29,7 @@ export class Dynamo {
         return params;
     }
 
-    makeGetUserParam(tableName, userID) {
+    makeUserParam(tableName, userID) {
         let params = {
             TableName : tableName,
             Key: {
@@ -40,7 +40,7 @@ export class Dynamo {
         return params;
     }
 
-    makeGetProductParam(tableName, productID) {
+    makeProductParam(tableName, productID) {
         let params = {
             TableName : tableName,
             Key: {
@@ -81,9 +81,9 @@ export class Dynamo {
     getTableEntry(tableName, key, val) {
         let params = null;
         if (key == "UserID") {
-            params = this.makeGetUserParam(tableName, val);
+            params = this.makeUserParam(tableName, val);
         } else if (key == "ProductID") {
-            params = this.makeGetProductParam(tableName, val);
+            params = this.makeProductParam(tableName, val);
         }
         try {
             const resp = this.client.get(params).promise();
