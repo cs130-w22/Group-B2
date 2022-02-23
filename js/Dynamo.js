@@ -29,7 +29,7 @@ export class Dynamo {
         return params;
     }
 
-    makeGetUserParam(tableName, userID) {
+    makeUserParam(tableName, userID) {
         let params = {
             TableName : tableName,
             Key: {
@@ -40,12 +40,26 @@ export class Dynamo {
         return params;
     }
 
-    makeGetProductParam(tableName, productID) {
+    makeProductParam(tableName, productID) {
         let params = {
             TableName : tableName,
             Key: {
                 "ProductID": productID
             }
+        };
+    
+        return params;
+    }
+
+    makeUpdateParam(tableName, id, newList) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "UserID": id
+            },
+            UpdateExpression: 'set #wishlist = :newWishlist',
+            ExpressionAttributeNames: {'#wishlist' : 'Wishlist'},
+            ExpressionAttributeValues: { ':newWishlist' : newList }
         };
     
         return params;
@@ -64,12 +78,22 @@ export class Dynamo {
     getTableEntry(tableName, key, val) {
         let params = null;
         if (key == "UserID") {
-            params = this.makeGetUserParam(tableName, val);
+            params = this.makeUserParam(tableName, val);
         } else if (key == "ProductID") {
-            params = this.makeGetProductParam(tableName, val);
+            params = this.makeProductParam(tableName, val);
         }
         try {
             const resp = this.client.get(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    updateTableEntry(tableName, key, val) {
+        let params = this.makeUpdateParam(tableName, key, val);
+        try {
+            const resp = this.client.update(params).promise();
             return resp;
         } catch (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
