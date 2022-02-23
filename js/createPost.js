@@ -13,7 +13,7 @@ window.onload = function() {
     docClientDynamo = new Dynamo();
 }
 
-async function validatePostCreation() {
+function validatePostCreation() {
     var itemName = document.getElementById("item_name").value;
     var itemCost = document.getElementById("item_cost").value;
     var itemDescription = document.getElementById("item_description").value;
@@ -49,16 +49,31 @@ async function validatePostCreation() {
 
     var productID = generateID(5);
     var imageID = generateID(5);
-    const respDynamo = await docClientDynamo.putTable(productID, itemCost, itemName, imageID, itemCategory);
-    const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
+    var tempUserId = '2';
+    doCreatePostTask(productID, imageID, image, itemCost, itemName, itemCategory, tempUserId);
+}
 
-    if (respDynamo['$response']['httpResponse']['statusCode'] == 200 && respS3['status'] == 200) {
+async function doCreatePostTask(productID, imageID, image, itemCost, itemName, itemCategory, userID) {
+    const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
+    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemName, respS3[1], imageID, itemCategory, userID);
+    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+    const newProductSellingList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);
+    const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
+    
+    if (respDynamoAddProductToCatalog['$response']['httpResponse']['statusCode'] == 200 && 
+        respDynamoAddProductToUser['$response']['httpResponse']['statusCode'] == 200 &&
+        respS3[0]['status'] == 200) {
         window.alert("Post uploaded! Check the catalog to see your post!");
     } else {
-        window.alert("Something went wrong...\nDynamo Status: " 
-        + respDynamo['$response']['httpResponse']['statusCode'] 
-        + "\nS3 Status: " + respS3);
+        window.alert("Something went wrong...\n" + 
+        "Dynamo Status: " + respDynamo['$response']['httpResponse']['statusCode'] + "\n" + 
+        "S3 Status: " + respS3[0]['status']);
     }
+}
+
+function arrayAppend(lst, val) {
+    lst.push(val);
+    return lst.filter(item => item);
 }
 
 async function getPresignedAndUpload(directory, image) {
@@ -71,7 +86,8 @@ async function getPresignedAndUpload(directory, image) {
         body: image
     });
 
-    return resp;
+    const img = url.split('?')[0];
+    return [resp, img];
 }
 
 function generateID(length) {

@@ -8,7 +8,6 @@ window.onload = function() {
 	filterButton.addEventListener("click", onClickFilter, false);
 
 	docClient = new Dynamo();
-	console.log(window.location);
 }
 
 async function onClickFilter() {
@@ -21,7 +20,6 @@ async function onClickFilter() {
 		divLoading.style.visibility = 'visible';
 
 		const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
-		console.log(resp)
 		divLoading.style.visibility = 'hidden';
 		updateTable(divCatalog, resp.Items);
 	}
@@ -41,7 +39,7 @@ function updateTable(divCatalog, listOfProducts) {
 		let info = ["Product: " + item['Product'], 
 					"Seller: " + item['SellerName'], 
 					"Location: " + item['Location'], 
-					"Cost: " + item['Cost']]
+					"Cost: " + item['Cost']];
 
 		for (let i = 0; i < info.length; i++) {
 			let liTag = createTag('li', null, "liStyle");
@@ -52,7 +50,7 @@ function updateTable(divCatalog, listOfProducts) {
 		let ahref = createTag('a', null, null);
 		let imgTag = createTag('img', null, 'productImage');
 		ahref.href = 'postdes.html?productid=' + item['ProductID'];
-		imgTag.src = "/img/chair.jpeg";
+		imgTag.src = item['ImageUrl'];
 		ahref.appendChild(imgTag);
 		divLeftTag.appendChild(ahref);
 		divRightTag.appendChild(ulProductInfoTag);
