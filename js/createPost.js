@@ -13,7 +13,7 @@ async function validatePostCreation() {
     var itemName = document.getElementById("item_name").value;
     var itemCost = document.getElementById("item_cost").value;
     var itemDescription = document.getElementById("item_description").value;
-    var category = document.getElementById("category").value;
+    var itemCategory = document.getElementById("category").value;
     var image = document.getElementById("myFile").value;
 
     var cost = new RegExp('([0-9])+\.?([0-9])*');
@@ -50,10 +50,14 @@ async function validatePostCreation() {
         return false;
     }
 
-    // var productID = generateString(8);
-    // var imageID = generateString(8);
-    var resp = await docClient.putTable();
-    console.log(resp);
+    var productID = generateString(8);
+    var imageID = generateString(8);
+    await docClient.putTable(productID, itemCost, itemName, (image+imageID), itemCategory);
+    console.log("1");
+    await docClient.createS3Bucket((image+imageID));
+    console.log("2");
+    await docClient.putImage((image+imageID));
+    console.log("3");
     //docClient.putS3(image+imageID, image);
 
 }

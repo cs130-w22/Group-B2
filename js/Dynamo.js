@@ -76,18 +76,18 @@ export class Dynamo {
         }
     }
 
-    putTable() {
-        console.log("... into putTable func");
+    putTable(productID, itemCost, itemName, imageID, itemCategory) {
+        console.log("putting table");
         var params = {
             TableName: 'ProductCatalog',
             Item: {
-                ProductID: 'pid3',
-                Cost: '100',
+                ProductID: String(productID),
+                Cost: String(itemCost),
                 UserID: 'cookies',
                 Location: 'cookies',
-                Product: 'pname',
-                ImageID: 'iid',
-                ProductType: 'pcategory',
+                Product: String(itemName),
+                ImageID: String(imageID),
+                ProductType: String(itemCategory),
                 SellerName: 'cookies'
             }
         };
@@ -95,7 +95,41 @@ export class Dynamo {
             const resp = this.client.put(params).promise();
             return resp;
         } catch (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            console.error("unable to put table");
         }
+        console.log("... leaving putTable func");
+    }
+
+    createS3Bucket(imageID){
+        console.log("creating bucket...")
+        var params = {
+            Bucket: String(imageID),
+            CreateBucketConfiguration: {
+                LocationConstraint: "us-west-1"
+            }
+        };
+        
+        try {
+            const resp = this.s3.createBucket(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("unable to create s3 bucket");
+        }
+        console.log("... leaving createS3Bucket func");
+    }
+
+    putImage(imageID){
+        console.log("putting image...");
+        var params = {
+            Body: "data",
+            Bucket: imageID,
+        };
+        try{
+            const resp = this.s3.putObject(params).promise();
+            return resp; 
+        } catch(err) {
+            console.error("unable to put image");
+        }
+        console.log("... leaving putImage func");
     }
 }
