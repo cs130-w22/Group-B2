@@ -51,6 +51,20 @@ export class Dynamo {
         return params;
     }
 
+    makeUpdateParam(tableName, id, newList) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "UserID": id
+            },
+            UpdateExpression: 'set #wishlist = :newWishlist',
+            ExpressionAttributeNames: {'#wishlist' : 'Wishlist'},
+            ExpressionAttributeValues: { ':newWishlist' : newList }
+        };
+    
+        return params;
+    }
+
     makePutParam(productID, itemCost, itemName, imageID, itemCategory) {
         let params = {
             TableName: 'ProductCatalog',
@@ -90,6 +104,16 @@ export class Dynamo {
             return resp;
         } catch (err) {
             console.error("Unable to get. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    updateTableEntry(tableName, key, val) {
+        let params = this.makeUpdateParam(tableName, key, val);
+        try {
+            const resp = this.client.update(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
         }
     }
 
