@@ -51,17 +51,20 @@ export class Dynamo {
         return params;
     }
 
-    makeUpdateParam(tableName, id, newList) {
+    makePutParam(productID, itemCost, itemName, imageID, itemCategory) {
         let params = {
-            TableName : tableName,
-            Key: {
-                "UserID": id
-            },
-            UpdateExpression: 'set #wishlist = :newWishlist',
-            ExpressionAttributeNames: {'#wishlist' : 'Wishlist'},
-            ExpressionAttributeValues: { ':newWishlist' : newList }
+            TableName: 'ProductCatalog',
+            Item: {
+                ProductID: String(productID),
+                Cost: String(itemCost),
+                UserID: 'cookies',
+                Location: 'cookies',
+                Product: String(itemName),
+                ImageID: String(imageID),
+                ProductType: String(itemCategory),
+                SellerName: 'cookies'
+            }
         };
-    
         return params;
     }
 
@@ -86,40 +89,17 @@ export class Dynamo {
             const resp = this.client.get(params).promise();
             return resp;
         } catch (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            console.error("Unable to get. Error:", JSON.stringify(err, null, 2));
         }
     }
 
-    updateTableEntry(tableName, key, val) {
-        let params = this.makeUpdateParam(tableName, key, val);
-        try {
-            const resp = this.client.update(params).promise();
-            return resp;
-        } catch (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-        }
-    }
-
-    putTable() {
-        console.log("... into putTable func");
-        var params = {
-            TableName: 'ProductCatalog',
-            Item: {
-                ProductID: 'pid2',
-                Cost: '100',
-                UserID: 'cookies',
-                Location: 'cookies',
-                Product: 'pname',
-                ImageID: 'iid',
-                ProductType: 'pcategory',
-                SellerName: 'cookies'
-            }
-        };
+    putTable(productID, itemCost, itemName, imageID, itemCategory) { 
+        let params = this.makePutParam(productID, itemCost, itemName, imageID, itemCategory);
         try {
             const resp = this.client.put(params).promise();
-            return resp;
+            return resp
         } catch (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
         }
     }
 }

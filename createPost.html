@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="css/createPost.css">
+    <script type="text/javascript" src="./bundle/bundleCreatePost.js"></script>
 </head>
 
 <body>
@@ -25,25 +26,26 @@
             <div id="title">
                 <h1> <span style="color: #2D68C4"> Create</span> <span style="color: #F2A900"> Post </span> </h1>
             </div>
-            <form id="createPost">
-                <label for="item_name"> Item Name: </label>
-                <input type="text" id="item_name" name="name"><br>
-                <label for="item_cost">Item Cost: </label>
-                <input type="text" id="item_cost" name="cost"><br>
-                <label for="item_description">Description: </label>
-                <input type="text" id="item_description" name="desc"><br>
-                <label for="category">Category</label>
-                <select name="category" id="category" name="cat">
-                    <option value="furniture">Furniture</option>
-                    <option value="kitchenware">Kitchenware</option>
-                    <option value="technology">Electronics</option>
-                    <option value="furniture">School Supplies</option>
-                    <option value="furniture">Other</option>
-                </select><br>
-                <label for="filename"> Upload Images</label>
-                <input type="file" id="myFile" name="fname" multiple><br>
-                <input type="submit" id="submit-button" value=" post ">
-            </form>
+            <label for="item_name"> Item Name: </label>
+            <input type="text" id="item_name" name="name"><br>
+            <label for="item_cost">Item Cost: </label>
+            <input type="text" id="item_cost" name="cost"><br>
+            <label for="item_description">Description: </label>
+            <input type="text" id="item_description" name="desc"><br>
+            <label for="category">Category</label>
+            <select name="category" id="category" name="cat">
+                <option value="FUR">Furniture</option>
+                <option value="KS">Kitche Supplies</option>
+                <option value="ELE">Electronics</option>
+                <option value="SS">School Supplies</option>
+                <option value="OTH">Other</option>
+            </select><br>
+            <label for="filename"> Upload Images</label>
+            <input type="file" id="myFile" name="fname" multiple><br>
+            <input type="submit" id="submit" accept="image/*" value=" post ">
+        </div>
+        <div id="imgproof">
+
         </div>
     </div>
 </body>
