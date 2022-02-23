@@ -2,20 +2,22 @@ import { Dynamo } from "./Dynamo.js"
 
 var docClient = null;
 
-window.onload = async function() {
-	//let removeButton = document.getElementById("removeButton");
-
-	//removeButton.addEventListener("click", onClickRemove, false);
-
+window.onload = function() {
 	docClient = new Dynamo();
-    var userID = '1'
-    const resp = await docClient.getTableEntry("UserInformation", "UserID", userID);
-    queryEachProductAndGenerateList(resp.Item['Wishlist']);
+    refresh();
 }
 
-function queryEachProductAndGenerateList(listOfItemInWishlist) {
+async function refresh() {
+    var userID = '2'
+    const resp = await docClient.getTableEntry("UserInformation", "UserID", userID);
+    queryEachProductAndGenerateList(userID, resp.Item['Wishlist']);
+}
+
+function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
     let divWishlist = document.getElementById("wishlist");
     let ulCatalogTag = createTag('ul', null, 'ulCatalog');
+
+    divWishlist.innerHTML = '';
     listOfItemInWishlist.forEach(async function(productId) {
         const resp = await docClient.getTableEntry("ProductCatalog", "ProductID", productId);
 
@@ -47,8 +49,7 @@ function queryEachProductAndGenerateList(listOfItemInWishlist) {
         removeButton.type = 'button';
         removeButton.innerHTML = 'Remove';
         removeButton.addEventListener("click", onClickRemove, false);
-        removeButton.productId = productId;
-        removeButton.productName = resp.Item['Product'];
+        removeButton.params = [userID, productId, resp.Item['Product'], listOfItemInWishlist]
 
         divFirst.appendChild(ahref);
         divSecond.appendChild(ulProductInfoTag);
@@ -64,12 +65,26 @@ function queryEachProductAndGenerateList(listOfItemInWishlist) {
     divWishlist.appendChild(ulCatalogTag);
 }
 
-function onClickRemove(evt) {
-    let confirmed = window.confirm("Remove product \"" + evt.currentTarget.productName + "\" from your wishlist?");
+async function onClickRemove(evt) {
+    let userID = evt.currentTarget.params[0];
+    let productId = evt.currentTarget.params[1];
+    let productName = evt.currentTarget.params[2];
+    let wishlist = evt.currentTarget.params[3];
+
+    let confirmed = window.confirm("Remove product \"" + productName + "\" (ID=" + productId + ") from your wishlist?");
     if (confirmed) {
-        window.alert("Removing ID: " + evt.currentTarget.productId);
+        const index = wishlist.indexOf(productId);
+        wishlist.splice(index, 1);
+        const resp = await docClient.updateTableEntry("UserInformation", userID, wishlist);
+        let status = resp['$response']['httpResponse']['statusCode'];
+        if (status == 200) {
+            window.alert("Successfully removed \"" + productName + "\" (ID=" + productId + ").");
+            refresh();
+        } else {
+            window.alert("Unexpected error happened... (status=" + status + ").");
+        }
     } else {
-        window.alert("Not removing ID: " + evt.currentTarget.productId);
+        window.alert("Not removing \"" + productName + "\" (ID=" + productId + ").");
     }
 }
 
