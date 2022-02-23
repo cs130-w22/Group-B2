@@ -1,20 +1,24 @@
 import { Dynamo } from "./Dynamo.js"
+import { S3Bucket } from "./S3Bucket.js"
+var crypto = require("crypto");
 
-var docClient = new Dynamo();
+var docClientS3 = null;
+var docClientDynamo = null;
 
-window.onload = function () {
+window.onload = function() {
     let createPostButton = document.getElementById("submit");
     createPostButton.addEventListener("click", validatePostCreation, false);
+
+    docClientS3 = new S3Bucket();
+    docClientDynamo = new Dynamo();
 }
-
-
 
 async function validatePostCreation() {
     var itemName = document.getElementById("item_name").value;
     var itemCost = document.getElementById("item_cost").value;
     var itemDescription = document.getElementById("item_description").value;
     var itemCategory = document.getElementById("category").value;
-    var image = document.getElementById("myFile").value;
+    var image = document.getElementById("myFile").files[0];
 
     var cost = new RegExp('([0-9])+\.?([0-9])*');
 
@@ -24,17 +28,10 @@ async function validatePostCreation() {
     }
 
     if (!cost.test(itemCost)) {
-        //console.log("uh");
         alert("please enter valid item cost");
         return false;
     } else {
-
-        if (itemCost.indexOf('.') == itemCost.length - 3 || itemCost.indexOf('.') == itemCost.length - 2 || itemCost.indexOf('.') == -1) {
-            // okay format
-            // $x.x
-            // $x.xx
-            // $x
-        } else {
+        if (!(itemCost.indexOf('.') == itemCost.length - 3 || itemCost.indexOf('.') == itemCost.length - 2 || itemCost.indexOf('.') == -1)) {
             alert("please enter valid item cost");
             return false;
         }
@@ -50,29 +47,33 @@ async function validatePostCreation() {
         return false;
     }
 
-    var productID = generateString(8);
-    var imageID = generateString(8);
-    docClient.putTable(productID, itemCost, itemName, (image+imageID), itemCategory);
-    console.log("1");
-    docClient.createS3Bucket((image+imageID));
-    console.log("2");
-    docClient.putImage((image+imageID));
-    console.log("3");
-    //docClient.putS3(image+imageID, image);
+    var productID = generateID(5);
+    var imageID = generateID(5);
+    const respDynamo = await docClientDynamo.putTable(productID, itemCost, itemName, imageID, itemCategory);
+    const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
 
-}
-
-const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-function generateString(length) {
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    if (respDynamo['$response']['httpResponse']['statusCode'] == 200 && respS3['status'] == 200) {
+        window.alert("Post uploaded! Check the catalog to see your post!");
+    } else {
+        window.alert("Something went wrong...\nDynamo Status: " 
+        + respDynamo['$response']['httpResponse']['statusCode'] 
+        + "\nS3 Status: " + respS3);
     }
-
-    return result;
 }
 
+async function getPresignedAndUpload(directory, image) {
+    const url = await docClientS3.generateURL(directory);
+    const resp = await fetch(url, {
+        method: "PUT",
+        headers: {
+           "Content-Type": "multipart/form-data"
+        },
+        body: image
+    });
 
+    return resp;
+}
 
+function generateID(length) {
+    return crypto.randomBytes(length).toString('hex');
+}
