@@ -11,6 +11,7 @@ export class Dynamo {
             endpoint: process.env.ENDPOINT
         });
         this.client = new AWS.DynamoDB.DocumentClient();
+        this.s3 = new AWS.S3();
     }
 
     makeQueryParam(tableName, indexName, attrName, attrVal) {
@@ -112,7 +113,7 @@ export class Dynamo {
         };
         
         try {
-            this.s3.s3.createBucket(params, function (err, data) {
+            this.s3.createBucket(params, function (err, data) {
                 if (err) console.log("error creating bucket"); // an error occurred
                 else console.log("bucket created!");           // successful response
             

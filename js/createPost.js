@@ -52,11 +52,11 @@ async function validatePostCreation() {
 
     var productID = generateString(8);
     var imageID = generateString(8);
-    await docClient.putTable(productID, itemCost, itemName, (image+imageID), itemCategory);
+    docClient.putTable(productID, itemCost, itemName, (image+imageID), itemCategory);
     console.log("1");
-    await docClient.createS3Bucket((image+imageID));
+    docClient.createS3Bucket((image+imageID));
     console.log("2");
-    await docClient.putImage((image+imageID));
+    docClient.putImage((image+imageID));
     console.log("3");
     //docClient.putS3(image+imageID, image);
 
