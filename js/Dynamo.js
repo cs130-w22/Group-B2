@@ -51,30 +51,31 @@ export class Dynamo {
         return params;
     }
 
-    makeUpdateParam(tableName, id, newList) {
+    makeUpdateParam(tableName, id, attrName, attrVal) {
         let params = {
             TableName : tableName,
             Key: {
                 "UserID": id
             },
             UpdateExpression: 'set #wishlist = :newWishlist',
-            ExpressionAttributeNames: {'#wishlist' : 'Wishlist'},
-            ExpressionAttributeValues: { ':newWishlist' : newList }
+            ExpressionAttributeNames: {'#wishlist' : attrName},
+            ExpressionAttributeValues: { ':newWishlist' : attrVal }
         };
     
         return params;
     }
 
-    makePutParam(productID, itemCost, itemName, imageID, itemCategory) {
+    makePutParam(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID) {
         let params = {
             TableName: 'ProductCatalog',
             Item: {
                 ProductID: String(productID),
                 Cost: String(itemCost),
-                UserID: 'cookies',
+                UserID: userID,
                 Location: 'cookies',
                 Product: String(itemName),
                 ImageID: String(imageID),
+                ImageUrl: imageUrl,
                 ProductType: String(itemCategory),
                 SellerName: 'cookies'
             }
@@ -107,8 +108,8 @@ export class Dynamo {
         }
     }
 
-    updateTableEntry(tableName, key, val) {
-        let params = this.makeUpdateParam(tableName, key, val);
+    updateTableEntry(tableName, key, attrName, attrVal) {
+        let params = this.makeUpdateParam(tableName, key, attrName, attrVal);
         try {
             const resp = this.client.update(params).promise();
             return resp;
@@ -117,8 +118,8 @@ export class Dynamo {
         }
     }
 
-    putTable(productID, itemCost, itemName, imageID, itemCategory) { 
-        let params = this.makePutParam(productID, itemCost, itemName, imageID, itemCategory);
+    putProductTableEntry(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID) { 
+        let params = this.makePutParam(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID);
         try {
             const resp = this.client.put(params).promise();
             return resp

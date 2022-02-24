@@ -75,7 +75,7 @@ async function onClickRemove(evt) {
     if (confirmed) {
         const index = wishlist.indexOf(productId);
         wishlist.splice(index, 1);
-        const resp = await docClient.updateTableEntry("UserInformation", userID, wishlist);
+        const resp = await docClient.updateTableEntry("UserInformation", userID, 'Wishlist', wishlist);
         let status = resp['$response']['httpResponse']['statusCode'];
         if (status == 200) {
             window.alert("Successfully removed \"" + productName + "\" (ID=" + productId + ").");
