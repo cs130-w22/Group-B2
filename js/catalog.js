@@ -25,7 +25,7 @@ async function onClickFilter() {
 	}
 }
 
-function updateTable(divCatalog, listOfProducts) {
+export function updateTable(divCatalog, listOfProducts) {
 	let ulCatalogTag = createTag('ul', null, 'ulCatalog');
 
 	divCatalog.innerHTML = '';

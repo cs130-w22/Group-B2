@@ -1,4 +1,4 @@
-const { createTag } = require('../js/catalog.js');
+const { updateTable, createTag } = require('../js/catalog.js');
 
 test("Testing tag creation...", () => {
     const testTag = createTag('tagName', 'className', 'id');
@@ -14,4 +14,10 @@ test("Testing tag creation data-less...", () => {
     expect(testTag.tagName).toBe("NULL");
     expect(testTag.className).toBe("");
     expect(testTag.id).toBe("");
+})
+
+test("Testing updating table...", () => {
+    var tag = document.createElement('div');
+    var testList = [];
+    expect(updateTable(tag, testList)).toBe(undefined);
 })
