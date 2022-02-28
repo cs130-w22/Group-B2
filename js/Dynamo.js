@@ -65,19 +65,30 @@ export class Dynamo {
         return params;
     }
 
-    makePutParam(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID) {
+    makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) {
         let params = {
             TableName: 'ProductCatalog',
             Item: {
                 ProductID: String(productID),
                 Cost: String(itemCost),
                 UserID: userID,
-                Location: 'cookies',
+                Location: address,
                 Product: String(itemName),
                 ImageID: String(imageID),
                 ImageUrl: imageUrl,
                 ProductType: String(itemCategory),
                 SellerName: 'cookies'
+            }
+        };
+        return params;
+    }
+
+    makeProductWishlistWatchParam(productID) {
+        let params = {
+            TableName: 'Wishlist',
+            Item: {
+                ProductID: String(productID),
+                ListOfUsers: []
             }
         };
         return params;
@@ -118,8 +129,18 @@ export class Dynamo {
         }
     }
 
-    putProductTableEntry(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID) { 
-        let params = this.makePutParam(productID, itemCost, itemName, imageUrl, imageID, itemCategory, userID);
+    putProductTableEntry(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) { 
+        let params = this.makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID);
+        try {
+            const resp = this.client.put(params).promise();
+            return resp
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    putProductWishlistWatchEntry(productID) { 
+        let params = this.makeProductWishlistWatchParam(productID);
         try {
             const resp = this.client.put(params).promise();
             return resp
