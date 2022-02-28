@@ -32,14 +32,14 @@ test("Calling makeUpdateParam()...", () => {
     expect(params.ExpressionAttributeValues).toStrictEqual({":newWishlist": "TestAttrVal"});
 })
 
-test("Calling makePutParam()...", () => {
-    const params = dynamo.makePutParam("TestProductID", "TestCost", "TestItem", "TestImageURL", "TestImageID", "TestCategory", "TestUserID");
+test("Calling makeProductPutParam()...", () => {
+    const params = dynamo.makeProductPutParam("TestProductID", "TestCost", "TestAddr", "TestItem", "TestImageURL", "TestImageID", "TestCategory", "TestUserID");
     const ItemParam = params.Item
     expect(params.TableName).toBe("ProductCatalog");
     expect(ItemParam.ProductID).toBe("TestProductID");
     expect(ItemParam.Cost).toBe("TestCost");
     expect(ItemParam.UserID).toBe("TestUserID");
-    //expect(ItemParam.Location).toBe("TestUserID");
+    expect(ItemParam.Location).toBe("TestAddr");
     expect(ItemParam.Product).toBe("TestItem");
     expect(ItemParam.ImageID).toBe("TestImageID");
     expect(ItemParam.ImageUrl).toBe("TestImageURL");

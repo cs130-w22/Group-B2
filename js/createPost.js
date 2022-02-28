@@ -18,6 +18,7 @@ function validatePostCreation() {
     var itemCost = document.getElementById("item_cost").value;
     var itemDescription = document.getElementById("item_description").value;
     var itemCategory = document.getElementById("category").value;
+    var address = document.getElementById("address").value;
     var image = document.getElementById("myFile").files[0];
 
     var cost = new RegExp('([0-9])+\.?([0-9])*');
@@ -50,17 +51,20 @@ function validatePostCreation() {
     var productID = generateID(5);
     var imageID = generateID(5);
     var tempUserId = '2';
-    doCreatePostTask(productID, imageID, image, itemCost, itemName, itemCategory, tempUserId);
+    doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, tempUserId);
 }
 
-async function doCreatePostTask(productID, imageID, image, itemCost, itemName, itemCategory, userID) {
+async function doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, userID) {
     const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
-    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemName, respS3[1], imageID, itemCategory, userID);
+    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, address, itemName, respS3[1], imageID, itemCategory, userID);
+    const respDynamoWishlist = await docClientDynamo.putProductWishlistWatchEntry(productID);
     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
     const newProductSellingList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);
     const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
     
+    console.log(respDynamoWishlist);
     if (respDynamoAddProductToCatalog['$response']['httpResponse']['statusCode'] == 200 && 
+    respDynamoWishlist['$response']['httpResponse']['statusCode'] == 200 && 
         respDynamoAddProductToUser['$response']['httpResponse']['statusCode'] == 200 &&
         respS3[0]['status'] == 200) {
         window.alert("Post uploaded! Check the catalog to see your post!");
