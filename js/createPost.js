@@ -1,8 +1,19 @@
+/**
+ * @file Create post logic file
+ */
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 var crypto = require("crypto");
 
+/**
+ * S3 Object
+ * @type {S3}
+ */
 var docClientS3 = null;
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
 var docClientDynamo = null;
 
 window.onload = function() {
@@ -13,6 +24,10 @@ window.onload = function() {
     docClientDynamo = new Dynamo();
 }
 
+/**
+ * Validate all input fields when create post button is clicked
+ * @returns void
+ */
 function validatePostCreation() {
     var itemName = document.getElementById("item_name").value;
     var itemCost = document.getElementById("item_cost").value;
@@ -54,6 +69,18 @@ function validatePostCreation() {
     doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, tempUserId);
 }
 
+/**
+ * Adds all infomation to the database when creating a product post
+ * @param {String} productID Product ID
+ * @param {String} imageID Image ID
+ * @param {String} address Address location of the product
+ * @param {File} image Image file of the product
+ * @param {String} itemCost Cost of the product
+ * @param {String} itemName Name of the product
+ * @param {String} itemCategory Category product
+ * @param {String} userID Seller's User ID
+ * @returns void
+ */
 async function doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, userID) {
     const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
     const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, address, itemName, respS3[1], imageID, itemCategory, userID);
@@ -75,11 +102,23 @@ async function doCreatePostTask(productID, imageID, address, image, itemCost, it
     }
 }
 
+/**
+ * Append val to lst and return the new list with removed empty and null values
+ * @param {Object[]} lst 
+ * @param {Object} val 
+ * @returns Object[]
+ */
 function arrayAppend(lst, val) {
     lst.push(val);
     return lst.filter(item => item);
 }
 
+/**
+ * API call to generate S3 presigned URL and upload file using PUT request
+ * @param {String} directory Directory to add file to S3
+ * @param {File} image Image file of product
+ * @returns Object[]
+ */
 async function getPresignedAndUpload(directory, image) {
     const url = await docClientS3.generateURL(directory);
     const resp = await fetch(url, {
@@ -94,6 +133,11 @@ async function getPresignedAndUpload(directory, image) {
     return [resp, img];
 }
 
+/**
+ * Generate an ID given length
+ * @param {Number} length Length of ID
+ * @returns String
+ */
 function generateID(length) {
     return crypto.randomBytes(length).toString('hex');
 }
