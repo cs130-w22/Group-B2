@@ -1,5 +1,12 @@
+/**
+ * @file Catalog logic file
+ */
 import { Dynamo } from "./Dynamo.js"
 
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
 var docClient = null;
 
 window.onload = function() {
@@ -10,6 +17,10 @@ window.onload = function() {
 	docClient = new Dynamo();
 }
 
+/**
+ * Filter function call logic
+ * @returns void
+ */
 async function onClickFilter() {
 	var productType = document.getElementById("items");
 	if (productType.value != "SELECT") {
@@ -25,6 +36,12 @@ async function onClickFilter() {
 	}
 }
 
+/**
+ * Update table helper function
+ * @param {Object} divCatalog Div tag to update table
+ * @param {Object[]} listOfProducts List of all queried products from Dynamo DB
+ * @returns void
+ */
 export function updateTable(divCatalog, listOfProducts) {
 	let ulCatalogTag = createTag('ul', null, 'ulCatalog');
 
@@ -67,6 +84,13 @@ export function updateTable(divCatalog, listOfProducts) {
 	divCatalog.style.visibility = 'visible';
 }
 
+/**
+ * Create tag helper function
+ * @param {String} tagName Tag name
+ * @param {String} className Class name for tag
+ * @param {String} idName ID name for tag
+ * @returns Element
+ */
 export function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {

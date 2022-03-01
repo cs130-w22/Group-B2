@@ -27,9 +27,9 @@ test("Calling makeUpdateParam()...", () => {
     const params = dynamo.makeUpdateParam("TestTable", "TestID", "TestAttrName", "TestAttrVal");
     expect(params.TableName).toBe("TestTable");
     expect(params.Key).toStrictEqual({"UserID": "TestID"});
-    expect(params.UpdateExpression).toBe("set #wishlist = :newWishlist");
-    expect(params.ExpressionAttributeNames).toStrictEqual({"#wishlist": "TestAttrName"});
-    expect(params.ExpressionAttributeValues).toStrictEqual({":newWishlist": "TestAttrVal"});
+    expect(params.UpdateExpression).toBe("set #list = :list");
+    expect(params.ExpressionAttributeNames).toStrictEqual({"#list": "TestAttrName"});
+    expect(params.ExpressionAttributeValues).toStrictEqual({":list": "TestAttrVal"});
 })
 
 test("Calling makeProductPutParam()...", () => {
