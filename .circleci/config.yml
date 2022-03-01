@@ -16,4 +16,5 @@ workflows:
     jobs:
       - install
       - node/test:
+          requires: install
           app-dir: ~/project
