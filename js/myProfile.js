@@ -21,6 +21,17 @@ window.onload = function(){
 } 
 
 /**
+ * Append val to lst and return the new list with removed empty and null values
+ * @param {Object[]} lst 
+ * @param {Object} val 
+ * @returns Object[]
+ */
+function arrayAppend(lst, val) {
+    lst.push(val);
+    return lst.filter(item => item);
+}
+
+/**
  * Removes product information from a user's profile in the database 
  * @param {String} productID Product ID
  * @param {String} userID Seller's User ID
@@ -45,7 +56,7 @@ async function removePostFromTable(userID, productID){
     if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
         respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
         respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
-        window.alert("Post uploaded! Check the catalog to see your post!");
+        window.alert("Post successfully removed");
     } else {
         window.alert("Something went wrong...\n");
     }
