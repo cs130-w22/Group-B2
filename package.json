@@ -18,7 +18,8 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.0.0",
     "esmify": "^2.1.1",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "require": "^2.4.20"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
