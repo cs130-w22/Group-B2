@@ -21,15 +21,15 @@ window.onload = function(){
 } 
 
 
-export function removePostFromTable(userID, productID){
+async function removePostFromTable(userID, productID){
     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
     const userSellingProductIDList = respDyanmoGetUserEntry.Item['ListofProductIDSelling']
-    const indexOfProduct = indexOf(userSellingProductIDList, productID);
-    const newProductSellingList; 
+    const indexOfProduct = indexOf(userSellingProductIDList, productID); 
+    newProductSellingList; 
     if(indexOfProduct > -1){
-        newProductSellingList = splce(indexOfProduct, 1); 
+        newProductSellingList = splce(indexOfProduct, 1);
     } else {
-        newProductSellingList = userSellingProductIDList 
+        newProductSellingList = userSellingProductIDList
     }
     const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
     // error check? 
