@@ -1,4 +1,6 @@
 .DS_Store
 .env
+.htaccess
 bundle/*.js
+out
 node_modules/

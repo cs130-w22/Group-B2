@@ -1,5 +1,12 @@
+/**
+ * @file Wishlist logic file
+ */
 import { Dynamo } from "./Dynamo.js"
 
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
 var docClient = null;
 
 window.onload = function() {
@@ -7,12 +14,22 @@ window.onload = function() {
     refresh();
 }
 
+/**
+ * Refresh Wishlist div section
+ * @returns void
+ */
 async function refresh() {
     var userID = '2'
     const resp = await docClient.getTableEntry("UserInformation", "UserID", userID);
     queryEachProductAndGenerateList(userID, resp.Item['Wishlist']);
 }
 
+/**
+ * Create a structured of tags to update div section of wishlist
+ * @param {String} userID User ID
+ * @param {Object[]} listOfItemInWishlist List of product in User ID's wishlist
+ * @returns void
+ */
 function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
     let divWishlist = document.getElementById("wishlist");
     let ulCatalogTag = createTag('ul', null, 'ulCatalog');
@@ -65,6 +82,11 @@ function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
     divWishlist.appendChild(ulCatalogTag);
 }
 
+/**
+ * Button listener to remove a product from wishlist 
+ * @param {Event} evt Event object associated with the product 
+ * @returns void
+ */
 async function onClickRemove(evt) {
     let userID = evt.currentTarget.params[0];
     let productId = evt.currentTarget.params[1];
@@ -75,7 +97,7 @@ async function onClickRemove(evt) {
     if (confirmed) {
         const index = wishlist.indexOf(productId);
         wishlist.splice(index, 1);
-        const resp = await docClient.updateTableEntry("UserInformation", userID, wishlist);
+        const resp = await docClient.updateTableEntry("UserInformation", userID, 'Wishlist', wishlist);
         let status = resp['$response']['httpResponse']['statusCode'];
         if (status == 200) {
             window.alert("Successfully removed \"" + productName + "\" (ID=" + productId + ").");
@@ -88,6 +110,13 @@ async function onClickRemove(evt) {
     }
 }
 
+/**
+ * Create tag helper function
+ * @param {String} tagName Tag name
+ * @param {String} className Class name for tag
+ * @param {String} idName ID name for tag
+ * @returns Element
+ */
 function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {

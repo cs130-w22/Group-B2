@@ -1,5 +1,12 @@
+/**
+ * @file Catalog logic file
+ */
 import { Dynamo } from "./Dynamo.js"
 
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
 var docClient = null;
 
 window.onload = function() {
@@ -8,9 +15,12 @@ window.onload = function() {
 	filterButton.addEventListener("click", onClickFilter, false);
 
 	docClient = new Dynamo();
-	console.log(window.location);
 }
 
+/**
+ * Filter function call logic
+ * @returns void
+ */
 async function onClickFilter() {
 	var productType = document.getElementById("items");
 	if (productType.value != "SELECT") {
@@ -21,13 +31,18 @@ async function onClickFilter() {
 		divLoading.style.visibility = 'visible';
 
 		const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
-		console.log(resp)
 		divLoading.style.visibility = 'hidden';
 		updateTable(divCatalog, resp.Items);
 	}
 }
 
-function updateTable(divCatalog, listOfProducts) {
+/**
+ * Update table helper function
+ * @param {Object} divCatalog Div tag to update table
+ * @param {Object[]} listOfProducts List of all queried products from Dynamo DB
+ * @returns void
+ */
+export function updateTable(divCatalog, listOfProducts) {
 	let ulCatalogTag = createTag('ul', null, 'ulCatalog');
 
 	divCatalog.innerHTML = '';
@@ -41,7 +56,7 @@ function updateTable(divCatalog, listOfProducts) {
 		let info = ["Product: " + item['Product'], 
 					"Seller: " + item['SellerName'], 
 					"Location: " + item['Location'], 
-					"Cost: " + item['Cost']]
+					"Cost: " + item['Cost']];
 
 		for (let i = 0; i < info.length; i++) {
 			let liTag = createTag('li', null, "liStyle");
@@ -52,7 +67,7 @@ function updateTable(divCatalog, listOfProducts) {
 		let ahref = createTag('a', null, null);
 		let imgTag = createTag('img', null, 'productImage');
 		ahref.href = 'postdes.html?productid=' + item['ProductID'];
-		imgTag.src = "/img/chair.jpeg";
+		imgTag.src = item['ImageUrl'];
 		ahref.appendChild(imgTag);
 		divLeftTag.appendChild(ahref);
 		divRightTag.appendChild(ulProductInfoTag);
@@ -69,6 +84,13 @@ function updateTable(divCatalog, listOfProducts) {
 	divCatalog.style.visibility = 'visible';
 }
 
+/**
+ * Create tag helper function
+ * @param {String} tagName Tag name
+ * @param {String} className Class name for tag
+ * @param {String} idName ID name for tag
+ * @returns Element
+ */
 export function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {

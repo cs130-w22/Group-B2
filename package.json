@@ -5,7 +5,9 @@
   "scripts": {
     "build-catalog": "browserify js/catalog.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCatalog.js",
     "build-wishlist": "browserify js/wishlist.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleWishlist.js",
-    "build": "npm run build-catalog && npm run build-wishlist",
+    "build-createPost": "browserify js/createPost.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCreatePost.js",
+    "build-myProfile": "browserify js/myProfile.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleMyProfile.js",
+    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost && npm run build-myProfile",
     "test": "jest"
   },
   "keywords": [],
@@ -14,9 +16,11 @@
   "dependencies": {
     "aws-sdk": "^2.1073.0",
     "browserify": "^17.0.0",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.0",
     "esmify": "^2.1.1",
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+    "require": "^0.4.4"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
