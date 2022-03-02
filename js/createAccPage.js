@@ -3,18 +3,11 @@ function setCookie(name, exdays) {
     var exdate = new Date();
     exdate.setDate(exdate.getDate() + exdays);
     var exp_value = "; expires=" + exdate.toUTCString() + "; path=/";
-    document.cookie = "UserID=" + makeid(5) + "; SellerName=" + name + exp_value;
+    document.cookie = "UserID=" + generateID(5) + "; SellerName=" + name + exp_value;
 }
 
-function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() *
-            charactersLength));
-    }
-    return result;
+function generateID(length) {
+    return crypto.randomBytes(length).toString('hex');
 }
 
 window.onload = function () {

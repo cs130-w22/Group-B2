@@ -229,6 +229,36 @@ export class Dynamo {
     }
 
     /**
+     * Creates Parameter function for Dynamo deleteProductTableEntry function to remove product entries
+     * @param {String} productID Product ID
+     * @returns Object
+     */
+    makeProductDeleteParam(productID){
+        let params = {
+            TableName: 'ProductCatalog',
+            Item: {
+                ProductID: productID,
+            }
+        };
+        return params;
+    }
+
+    /**
+     * Delete product entry in Dynamo DB ProductCatalog
+     * @param {String} productID Product ID
+     * @returns Promise
+     */
+    deleteProductTableEntry(productID){
+        let params = this.makeProductDeleteParam(productID)
+        try{
+            const resp = this.client.delete(params).promise(); 
+            return resp
+        } catch (err) {
+            console.error("Unable to delete. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    /**
      * Create Wishlist watch entry into Wishlist Dynamo DB table
      * @param {String} productID Product ID
      * @returns Promise

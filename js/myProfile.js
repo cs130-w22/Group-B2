@@ -20,7 +20,12 @@ window.onload = function(){
     docClientS3 = new S3Bucket(); 
 } 
 
-
+/**
+ * Removes product information from a user's profile in the database 
+ * @param {String} productID Product ID
+ * @param {String} userID Seller's User ID
+ * @returns void
+ */
 async function removePostFromTable(userID, productID){
     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
     const userSellingProductIDList = respDyanmoGetUserEntry.Item['ListofProductIDSelling']
@@ -31,6 +36,18 @@ async function removePostFromTable(userID, productID){
     } else {
         newProductSellingList = userSellingProductIDList
     }
-    const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
-    // error check? 
+    const respDynamoRemoveProductToUserSelling = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
+    const userSoldProductIDList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSold'], productID);
+    const respDynamoAddProductToUserSoldList = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSold', userSoldProductIDList);
+
+    const respDynamoDeleteProductFromCatalog = await docClientDynamo.deleteProductTableEntry(productID); 
+
+    if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
+        respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
+        respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
+        window.alert("Post uploaded! Check the catalog to see your post!");
+    } else {
+        window.alert("Something went wrong...\n");
+    }
+     
 }
