@@ -37,10 +37,15 @@
     const product = respDyanmoGetProductEntry.Item.Product;
     const image = respDyanmoGetProductEntry.Item.ImageUrl;
     const seller = respDyanmoGetProductEntry.Item.SellerName;
+    const desc = respDyanmoGetProductEntry.Item.Description;
+    const userID = respDyanmoGetProductEntry.Item.UserID;
     document.getElementById("cost").innerHTML = cost;
     document.getElementById("location").innerHTML = location;
     document.getElementById("product_name").innerHTML = product;
     document.getElementById("name").innerHTML = seller;
-    document.getElementById("image").innerHTML = image;
+    document.getElementById("image").src = image;
+    document.getElementById("desc").innterHTML = desc;
+
+    //window.location.href = "/myprofile.html?userid=" + resp.Item.UserID;
 }
  
