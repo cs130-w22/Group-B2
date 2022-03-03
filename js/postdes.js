@@ -16,22 +16,22 @@
  var docClientDynamo = null;
  
  window.onload = function(){
-     docClientDynamo = new Dynamo(); 
-     docClientS3 = new S3Bucket(); 
+    docClientDynamo = new Dynamo(); 
+    docClientS3 = new S3Bucket();
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const productid = urlParams.get('productid');
+    getPost(productid);
  } 
 
 /**
  * posts description 
  * @returns void
  */
-async function getPost(){
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    let productID = "";
-    if(urlParams.has("ProductID")){
-        productID = urlParams.get("ProductID");
-    }
+ async function getPost(productID){
     const respDyanmoGetProductEntry = await docClientDynamo.getTableEntry("ProductCatalog","ProductID",productID);
+    console.log(respDyanmoGetProductEntry);
     const cost = respDyanmoGetProductEntry.Item.Cost;
     const location = respDyanmoGetProductEntry.Item.Location;
     const product = respDyanmoGetProductEntry.Item.Product;
