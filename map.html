@@ -1,18 +1,151 @@
 <!DOCTYPE html>
+
+
 <html>
+  <style>
+  /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+#map {
+  height: 90%;
+}
+#button {
+  height: 10%;
+}
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+  </style>
   <head>
-    <title>Listing Map</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script src="./index.js"></script>
+  <div id="button"></div>
+   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js" ></script>
+
+<script>
+AWS.config.update({
+  region: "us-west-1",
+  endpoint: 'https://dynamodb.us-west-1.amazonaws.com',
+  accessKeyId: "AKIA3T6BBSSA7KSQ5FEU",
+  secretAccessKey: "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"
+});
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+var productID;
+var cost;
+var product;
+var productType;
+var sellerName;
+var userID;
+function scanData() {
+    var params = {
+        TableName: "ProductCatalog"
+    };
+		
+    docClient.scan(params, onScan);
+    
+    function onScan(err, data) {
+        if (err) {
+           document.getElementById('textarea').innerHTML += "Unable to scan the table: " + "\n" + JSON.stringify(err, undefined, 2);
+        } 
+        else {
+            
+            data.Items.forEach(function(item) {
+            		
+                //document.getElementById('textarea').innerHTML += item.Cost + ' ' + item.Product + ' ' + item.Location + '\n';
+                productID = item.ProductID;
+								cost = item.Cost;
+								//location = item.Location;
+								product = item.Product;
+								productType = item.ProductType;
+								sellerName = item.SellerName;
+								userID = item.UserID;
+                cost = item.Cost;
+                
+                
+         });
+            
+        }
+    }
+
+    
+}
+
+</script>
+<b>Press Scan, then Press Map &emsp;</b>
+<input id="scanData" type="button" value="Scan" onclick="scanData();" />
+<b>&emsp;</b>
+<input id="mapHi" type="button" value="Map" onclick="initMap();" />
   </head>
   <body>
     <div id="map"></div>
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&v=weekly"
-      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWarAfp7KYCDyJXdnWyYWaQOGgzKRfp8Q&callback=initMap&v=weekly&channel=2"
+      
     ></script>
+    <script>
+    
+
+
+// This example displays a marker at the center of Australia.
+// When the user clicks the marker, an info window opens.
+function initMap() {
+  console.log(productID);
+  console.log(cost);
+  console.log(product);
+  console.log(productType);
+  console.log(sellerName); 
+  console.log(userID);
+  const uluru6 = { lat: 34.064070, lng: -118.441020 };
+  
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: uluru6,
+  });
+  
+  
+  const contentString =  productType + ' ' + product + '.    Cost: ' 
+  + cost + '.    Seller Name: ' + sellerName ;
+ 	
+  /*  
+  const contentString =
+    '<div id="content">' +
+    '<div id="siteNotice">' +
+    "</div>" +
+    '<h1 id="firstHeading" class="firstHeading">Table</h1>' +
+    '<div id="bodyContent">' +
+    "<p><b>Wood Table</b>, sold by Jeff " +
+    "Cost: 5.99</p>" +
+    '<p><a href="https://www.google.com/">' +
+    "google</a> " +
+    "Product ID: 12345678.</p>" +
+    "</div>" +
+    "</div>"; 
+    */ 
+  const infowindow = new google.maps.InfoWindow({
+    content: contentString,
+  });
+  
+  
+  const marker6 = new google.maps.Marker({
+    position: uluru6,
+    map,
+    title: "Uluru6 (Ayers Rock)",
+  });
+
+  
+  marker6.addListener("click", () => {
+    infowindow.open({
+      anchor: marker6,
+      map,
+      shouldFocus: false,
+    });
+  });
+}
+    </script>
+    
   </body>
 </html>
