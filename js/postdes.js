@@ -23,6 +23,8 @@
     const urlParams = new URLSearchParams(queryString);
     const productid = urlParams.get('productid');
     getPost(productid);
+    let buyButton = document.getElementById("buy");
+    buyButton.addEventListener("click", pop);
  } 
 
 /**
@@ -39,13 +41,23 @@
     const seller = respDyanmoGetProductEntry.Item.SellerName;
     const desc = respDyanmoGetProductEntry.Item.Description;
     const userID = respDyanmoGetProductEntry.Item.UserID;
-    document.getElementById("cost").innerHTML = cost;
-    document.getElementById("location").innerHTML = location;
+    document.getElementById("cost").innerHTML = "$" + cost;
+    document.getElementById("location").innerHTML = "Location: " + location;
     document.getElementById("product_name").innerHTML = product;
-    document.getElementById("name").innerHTML = seller;
+    document.getElementById("name").innerHTML = "Seller's Name: " + seller;
     document.getElementById("image").src = image;
-    document.getElementById("desc").innterHTML = desc;
-
-    //window.location.href = "/myprofile.html?userid=" + resp.Item.UserID;
+    document.getElementById("description").innerHTML = desc;
+    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+    console.log(respDyanmoGetUserEntry);
+    const phone = respDyanmoGetUserEntry.Item.PhoneNumber;
+    const email = respDyanmoGetUserEntry.Item.Email;
+    document.getElementById("phone").innerHTML = "Phone Number: " + phone;
+    document.getElementById("email").innerHTML = "Email: " + email;
+    document.getElementById("profile").href = "/myprofile.html?userid=" + userID;
 }
- 
+
+async function pop() {
+   if(confirm("Do you wish to proceed buying the product?")){
+      window.location.href =  "./myprofile.html";
+   }
+ }
