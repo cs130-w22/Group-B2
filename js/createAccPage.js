@@ -1,3 +1,7 @@
+import { Dynamo } from "./Dynamo.js"
+var crypto = require("crypto");
+
+var docClientDynamo = null;
 
 function setCookie(name, exdays) {
     var exdate = new Date();
@@ -13,6 +17,8 @@ function generateID(length) {
 window.onload = function () {
     let submitButton = document.getElementById("submit");
     submitButton.addEventListener("click", validate, false);
+
+    docClientDynamo = new Dynamo();
 }
 
 
@@ -49,8 +55,23 @@ function validate()
         return false;
     } 
     setCookie(firstName+lastName, 1); 
-    
-    // temporary redirect for local catalog page 
-    //window.location.href = "../catalog.html";
 
+    var userID = generateID(5);
+    doCreateUserTask(firstName, lastName, email, phoneNumber, streetAddr, password, userID);
+    
+}
+
+async function doCreateUserTask(firstName, lastName, email, phone, street, password, userID) {
+    const respDynamoAddUser = await docClientDynamo.putUserEntry(firstName, lastName, email, phone, street, password, userID);
+    const respDynamoAddUserCred = await docClientDynamo.putUserCredEntry(email, password, userID);
+
+    if (respDynamoAddUser['$response']['httpResponse']['statusCode'] == 200 && respDynamoAddUserCred['$response']['httpResponse']['statusCode'] == 200) {
+        window.location.href = "./catalog.html";
+    } else {
+        window.alert("Error in creating user! Please try again.");
+    }
+}
+
+function generateID(length) {
+    return crypto.randomBytes(length).toString('hex');
 }

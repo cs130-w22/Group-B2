@@ -6,7 +6,7 @@ function validate()
     var re = new RegExp("^([A-Za-z0-9])+@g.ucla.edu$");
 
     if (re.test(email) && email=="admin@g.ucla.edu" && password=="password") {
-        window.location.href = "http://www.google.com";
+        window.location.href = "./catalog.html";
     } else {
         alert("invalid account");
     }

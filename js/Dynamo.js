@@ -149,6 +149,40 @@ export class Dynamo {
     }
 
     /**
+     * Creates Parameter function for Dynamo putUserEntry function to add users upon account creation
+     */
+     makeUserPutParam(firstName, lastName, email, phone, street, password, userID) {
+        let params = {
+            TableName: 'UserInformation',
+            Item: {
+                FirstName: firstName,
+                LastName: lastName,
+                Email: email,
+                PhoneNumber: phone,
+                Address: street,
+                Password: String(password),
+                UserID: String(userID)
+            }
+        };
+        return params;
+    }
+
+    /**
+     * Creates Parameter function for Dynamo putUserCredEntry function to add users upon account creation
+     */
+    makeUserCredPutParam(email, password, userID) {
+        let params = {
+            TableName: 'UserCred',
+            Item: {
+                Email: email,
+                Password: String(password),
+                UserID: String(userID)
+            }
+        };
+        return params;
+    }
+
+    /**
      * Queries Dynamo DB table
      * @param {String} tableName Table Name
      * @param {String} indexName Index Key
@@ -272,4 +306,36 @@ export class Dynamo {
             console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
         }
     }
+
+       /**
+     * Put product entry into Dynamo DB 
+     * @param {String} firstName First Name of User
+     * @param {String} lastName Last Name of User
+     * @param {String} email Email address of user
+     * @param {String} phone phone number of user
+     * @param {String} street Street Address of user
+     * @param {String} password Password of user
+     * @param {String} userID User's User ID
+     * @returns Promise
+     */
+    putUserEntry(firstName, lastName, email, phone, street, password, userID) { 
+        let params = this.makeUserPutParam(firstName, lastName, email, phone, street, password, userID);
+        try {
+            const resp = this.client.put(params).promise();
+            return resp
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    putUserCredEntry(email, password, userID) { 
+        let params = this.makeUserCredPutParam(email, password, userID);
+        try {
+            const resp = this.client.put(params).promise();
+            return resp
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
 }
+
