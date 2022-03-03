@@ -114,7 +114,7 @@ export class Dynamo {
      * @param {String} userID Seller's User ID
      * @returns Object
      */
-    makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) {
+    makeProductPutParam(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID) {
         let params = {
             TableName: 'ProductCatalog',
             Item: {
@@ -126,7 +126,8 @@ export class Dynamo {
                 ImageID: String(imageID),
                 ImageUrl: imageUrl,
                 ProductType: String(itemCategory),
-                SellerName: 'cookies'
+                SellerName: 'cookies',
+                Description: itemDescription
             }
         };
         return params;
@@ -218,8 +219,8 @@ export class Dynamo {
      * @param {String} userID Seller's User ID
      * @returns Promise
      */
-    putProductTableEntry(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) { 
-        let params = this.makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID);
+    putProductTableEntry(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID) { 
+        let params = this.makeProductPutParam(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID);
         try {
             const resp = this.client.put(params).promise();
             return resp
