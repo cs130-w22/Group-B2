@@ -31,6 +31,10 @@ async function getPost(catalog, productID, userID){
     const queryString = window.location.search;
     console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
+    const user = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+    const prodList = respDyanmoGetUserEntry.Item['ListofProductIDSelling']
+    const prodIndex = indexOf(prodList, productID); 
+    const prod = docClientDynamo.getTableEntry(catalog,"ProductID",productID);
     
 }
  
