@@ -21,20 +21,26 @@
  } 
 
 /**
- * Removes product information from a user's profile in the database 
- * @param {String} productID Product ID
- * @param {String} catalog ProductCatalog
- * @param {String} userID Seller's User ID
+ * posts description 
  * @returns void
  */
-async function getPost(catalog, productID, userID){
+async function getPost(){
     const queryString = window.location.search;
-    console.log(queryString);
     const urlParams = new URLSearchParams(queryString);
-    const user = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
-    const prodList = respDyanmoGetUserEntry.Item['ListofProductIDSelling']
-    const prodIndex = indexOf(prodList, productID); 
-    const prod = docClientDynamo.getTableEntry(catalog,"ProductID",productID);
-    
+    let productID = "";
+    if(urlParams.has("ProductID")){
+        productID = urlParams.get("ProductID");
+    }
+    const respDyanmoGetProductEntry = await docClientDynamo.getTableEntry("ProductCatalog","ProductID",productID);
+    const cost = respDyanmoGetProductEntry.Item.Cost;
+    const location = respDyanmoGetProductEntry.Item.Location;
+    const product = respDyanmoGetProductEntry.Item.Product;
+    const image = respDyanmoGetProductEntry.Item.ImageUrl;
+    const seller = respDyanmoGetProductEntry.Item.SellerName;
+    document.getElementById("cost").innerHTML = cost;
+    document.getElementById("location").innerHTML = location;
+    document.getElementById("product_name").innerHTML = product;
+    document.getElementById("name").innerHTML = seller;
+    document.getElementById("image").innerHTML = image;
 }
  
