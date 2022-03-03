@@ -106,6 +106,7 @@ export class Dynamo {
      * Creates Parameter function for Dynamo putProductTableEntry function to add product entries
      * @param {String} productID Product ID
      * @param {String} itemCost Cost of the product
+     * @param {String} itemDescription Description of product
      * @param {String} address Address location of the product
      * @param {String} itemName Product Name
      * @param {String} imageUrl Image URL for extracting to display on pages
