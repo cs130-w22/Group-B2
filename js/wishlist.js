@@ -59,7 +59,7 @@ function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
         let ahref = createTag('a', null, null);
 		let imgTag = createTag('img', null, 'productImage');
 		ahref.href = 'postdes.html?productid=' + productId;
-		imgTag.src = "/img/chair.jpeg";
+		imgTag.src = resp.Item['ImageUrl'];
 		ahref.appendChild(imgTag);
 
         let removeButton = createTag('button', null, 'removeButton');
