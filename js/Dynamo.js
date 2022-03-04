@@ -128,7 +128,8 @@ export class Dynamo {
                 ImageUrl: imageUrl,
                 ProductType: String(itemCategory),
                 SellerName: 'cookies',
-                Description: itemDescription
+                Description: itemDescription,
+                IsBought: "No"
             }
         };
         return params;
