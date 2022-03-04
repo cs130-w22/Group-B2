@@ -81,6 +81,23 @@ export class Dynamo {
     }
 
     /**
+     * Creates Parameter function for Dynamo getTableEntry to get user email and password information
+     * @param {String} tableName Table Name of Dynamo DB
+     * @param {String} userEmail User Email, key for the table
+     * @returns Object
+     */
+    makeUserCredParam(tableName, userEmail) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "Email": userEmail
+            }
+        };
+    
+        return params;
+    }
+
+    /**
      * Creates Parameter function for Dynamo updateTableEntry function to update values
      * @param {String} tableName Table Name of Dynamo DB
      * @param {String} userID User Name, key for the table
@@ -150,6 +167,14 @@ export class Dynamo {
 
     /**
      * Creates Parameter function for Dynamo putUserEntry function to add users upon account creation
+     * @param {String} firstName First name of user
+     * @param {String} lastName Last name of user
+     * @param {String} email User's ucla email address
+     * @param {String} phone User's phone number
+     * @param {String} street User's street address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Object
      */
      makeUserPutParam(firstName, lastName, email, phone, street, password, userID) {
         let params = {
@@ -161,7 +186,10 @@ export class Dynamo {
                 PhoneNumber: phone,
                 Address: street,
                 Password: String(password),
-                UserID: String(userID)
+                UserID: String(userID),
+                ListofProductIDSelling: [],
+                Wishlist: [],
+                ListofProductIDSold: []
             }
         };
         return params;
@@ -169,6 +197,10 @@ export class Dynamo {
 
     /**
      * Creates Parameter function for Dynamo putUserCredEntry function to add users upon account creation
+     * @param {String} email User's ucla email address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Object
      */
     makeUserCredPutParam(email, password, userID) {
         let params = {
@@ -213,7 +245,10 @@ export class Dynamo {
             params = this.makeUserParam(tableName, val);
         } else if (key == "ProductID") {
             params = this.makeProductParam(tableName, val);
+        } else if (key == "Email") {
+            params = this.makeUserCredParam(tableName, val);
         }
+
         try {
             const resp = this.client.get(params).promise();
             return resp;
@@ -307,15 +342,15 @@ export class Dynamo {
         }
     }
 
-       /**
-     * Put product entry into Dynamo DB 
-     * @param {String} firstName First Name of User
-     * @param {String} lastName Last Name of User
-     * @param {String} email Email address of user
-     * @param {String} phone phone number of user
-     * @param {String} street Street Address of user
-     * @param {String} password Password of user
-     * @param {String} userID User's User ID
+    /**
+     * Put product entry into Dynamo DB UserInformation
+     * @param {String} firstName First name of user
+     * @param {String} lastName Last name of user
+     * @param {String} email User's ucla email address
+     * @param {String} phone User's phone number
+     * @param {String} street User's street address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
      * @returns Promise
      */
     putUserEntry(firstName, lastName, email, phone, street, password, userID) { 
@@ -328,6 +363,13 @@ export class Dynamo {
         }
     }
 
+    /**
+     * Put product entry into Dynamo DB UserCred
+     * @param {String} email User's ucla email address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Promise
+     */
     putUserCredEntry(email, password, userID) { 
         let params = this.makeUserCredPutParam(email, password, userID);
         try {
