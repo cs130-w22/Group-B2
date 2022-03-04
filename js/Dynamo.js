@@ -81,6 +81,23 @@ export class Dynamo {
     }
 
     /**
+     * Creates Parameter function for Dynamo getTableEntry to get user email and password information
+     * @param {String} tableName Table Name of Dynamo DB
+     * @param {String} userEmail User Email, key for the table
+     * @returns Object
+     */
+    makeUserCredParam(tableName, userEmail) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "Email": userEmail
+            }
+        };
+    
+        return params;
+    }
+
+    /**
      * Creates Parameter function for Dynamo updateTableEntry function to update values
      * @param {String} tableName Table Name of Dynamo DB
      * @param {String} userID User Name, key for the table
@@ -152,6 +169,55 @@ export class Dynamo {
     }
 
     /**
+     * Creates Parameter function for Dynamo putUserEntry function to add users upon account creation
+     * @param {String} firstName First name of user
+     * @param {String} lastName Last name of user
+     * @param {String} email User's ucla email address
+     * @param {String} phone User's phone number
+     * @param {String} street User's street address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Object
+     */
+     makeUserPutParam(firstName, lastName, email, phone, street, password, userID) {
+        let params = {
+            TableName: 'UserInformation',
+            Item: {
+                FirstName: firstName,
+                LastName: lastName,
+                Email: email,
+                PhoneNumber: phone,
+                Address: street,
+                Password: String(password),
+                UserID: String(userID),
+                ListofProductIDSelling: [],
+                Wishlist: [],
+                ListofProductIDSold: []
+            }
+        };
+        return params;
+    }
+
+    /**
+     * Creates Parameter function for Dynamo putUserCredEntry function to add users upon account creation
+     * @param {String} email User's ucla email address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Object
+     */
+    makeUserCredPutParam(email, password, userID) {
+        let params = {
+            TableName: 'UserCred',
+            Item: {
+                Email: email,
+                Password: String(password),
+                UserID: String(userID)
+            }
+        };
+        return params;
+    }
+
+    /**
      * Queries Dynamo DB table
      * @param {String} tableName Table Name
      * @param {String} indexName Index Key
@@ -182,7 +248,10 @@ export class Dynamo {
             params = this.makeUserParam(tableName, val);
         } else if (key == "ProductID") {
             params = this.makeProductParam(tableName, val);
+        } else if (key == "Email") {
+            params = this.makeUserCredParam(tableName, val);
         }
+
         try {
             const resp = this.client.get(params).promise();
             return resp;
@@ -275,4 +344,43 @@ export class Dynamo {
             console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
         }
     }
+
+    /**
+     * Put product entry into Dynamo DB UserInformation
+     * @param {String} firstName First name of user
+     * @param {String} lastName Last name of user
+     * @param {String} email User's ucla email address
+     * @param {String} phone User's phone number
+     * @param {String} street User's street address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Promise
+     */
+    putUserEntry(firstName, lastName, email, phone, street, password, userID) { 
+        let params = this.makeUserPutParam(firstName, lastName, email, phone, street, password, userID);
+        try {
+            const resp = this.client.put(params).promise();
+            return resp
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
+
+    /**
+     * Put product entry into Dynamo DB UserCred
+     * @param {String} email User's ucla email address
+     * @param {String} password User's password
+     * @param {String} userID Unique user ID
+     * @returns Promise
+     */
+    putUserCredEntry(email, password, userID) { 
+        let params = this.makeUserCredPutParam(email, password, userID);
+        try {
+            const resp = this.client.put(params).promise();
+            return resp
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
 }
+

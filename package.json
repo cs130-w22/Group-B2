@@ -7,8 +7,10 @@
     "build-wishlist": "browserify js/wishlist.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleWishlist.js",
     "build-createPost": "browserify js/createPost.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCreatePost.js",
     "build-myProfile": "browserify js/myProfile.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleMyProfile.js",
+    "build-createAccount": "browserify js/createAccPage.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCreateAccount.js",
+    "build-login": "browserify js/loginPage.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleLogin.js",
     "build-postDes": "browserify js/postdes.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundlePostDes.js",
-    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost && npm run build-myProfile && npm run build-postDes",
+    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost && npm run build-myProfile && npm run build-postDes && npm run build-login && npm run build-createAccount",
     "test": "jest"
   },
   "keywords": [],

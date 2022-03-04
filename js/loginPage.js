@@ -1,14 +1,43 @@
-function validate()
+/**
+ * @file Login logic file
+ */
+import { Dynamo } from "./Dynamo.js"
+
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
+var docClient = null;
+
+window.onload = function() {
+    let loginButton = document.getElementById("Login");
+    docClient = new Dynamo();
+
+	loginButton.addEventListener("click", validate, false);
+}
+
+/**
+ * Email and password validation function
+ * @returns void
+ */
+async function validate()
 {
     var email=document.getElementById("email").value;
     var password=document.getElementById("password").value;
 
-    var re = new RegExp("^([A-Za-z0-9])+@g.ucla.edu$");
 
-    if (re.test(email) && email=="admin@g.ucla.edu" && password=="password") {
-        window.location.href = "http://www.google.com";
-    } else {
-        alert("invalid account");
+    const resp = await docClient.getTableEntry("UserCred", "Email", email);
+    //console.log(resp.Item == null);
+    if (resp.Item == null){ //Then email does not exist in database
+        alert("invalid email or password!");
+    }
+    else{
+        if (resp.Item["Password"] == password){
+            window.location.href = "./catalog.html";
+        }
+        else{
+            alert("invalid email or password");
+        }
     }
 
 }
