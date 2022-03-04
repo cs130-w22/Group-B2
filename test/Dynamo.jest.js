@@ -23,8 +23,8 @@ test("Calling makeProductParam()...", () => {
     expect(params.Key).toStrictEqual({"ProductID": "TestProductID"});
 })
 
-test("Calling makeUpdateParam()...", () => {
-    const params = dynamo.makeUpdateParam("TestTable", "TestID", "TestAttrName", "TestAttrVal");
+test("Calling makeUpdateParamUser()...", () => {
+    const params = dynamo.makeUpdateParamUser("TestTable", "TestID", "TestAttrName", "TestAttrVal");
     expect(params.TableName).toBe("TestTable");
     expect(params.Key).toStrictEqual({"UserID": "TestID"});
     expect(params.UpdateExpression).toBe("set #list = :list");
