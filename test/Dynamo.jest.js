@@ -33,10 +33,11 @@ test("Calling makeUpdateParam()...", () => {
 })
 
 test("Calling makeProductPutParam()...", () => {
-    const params = dynamo.makeProductPutParam("TestProductID", "TestCost", "TestAddr", "TestItem", "TestImageURL", "TestImageID", "TestCategory", "TestUserID");
+    const params = dynamo.makeProductPutParam("TestProductID", "TestCost", "TestDes", "TestAddr", "TestItem", "TestImageURL", "TestImageID", "TestCategory", "TestUserID");
     const ItemParam = params.Item
     expect(params.TableName).toBe("ProductCatalog");
     expect(ItemParam.ProductID).toBe("TestProductID");
+    expect(ItemParam.Description).toBe("TestDes");
     expect(ItemParam.Cost).toBe("TestCost");
     expect(ItemParam.UserID).toBe("TestUserID");
     expect(ItemParam.Location).toBe("TestAddr");
