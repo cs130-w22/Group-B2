@@ -2,6 +2,7 @@
  * @file Login logic file
  */
 import { Dynamo } from "./Dynamo.js"
+import * as cookie from './cookie.js'
 
 /**
  * Dynamo Object
@@ -10,6 +11,10 @@ import { Dynamo } from "./Dynamo.js"
 var docClient = null;
 
 window.onload = function() {
+    var userID = cookie.getCookie("UserID");
+	if (userID != "") {
+		window.location.href = "./catalog.html";
+	}
     let loginButton = document.getElementById("Login");
     docClient = new Dynamo();
 
@@ -27,17 +32,15 @@ async function validate()
 
 
     const resp = await docClient.getTableEntry("UserCred", "Email", email);
-    //console.log(resp.Item == null);
+    console.log(resp);
     if (resp.Item == null){ //Then email does not exist in database
         alert("invalid email or password!");
-    }
-    else{
+    } else {
         if (resp.Item["Password"] == password){
+            cookie.setCookie(resp.Item["UserID"], 5);
             window.location.href = "./catalog.html";
-        }
-        else{
+        } else{
             alert("invalid email or password");
         }
     }
-
 }

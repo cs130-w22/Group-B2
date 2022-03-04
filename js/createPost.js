@@ -3,6 +3,8 @@
  */
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
+import * as cookie from './cookie.js'
+import * as utils from './utils.js'
 var crypto = require("crypto");
 
 /**
@@ -16,9 +18,18 @@ var docClientS3 = null;
  */
 var docClientDynamo = null;
 
+var userID = cookie.getCookie("UserID");
+
 window.onload = function() {
+    if (userID == "") {
+		window.alert("You are not logged in. Redirecting to login page.");
+		window.location.href = "./loginPage.html";
+	}
     let createPostButton = document.getElementById("submit");
+    let logoutButton = document.getElementById("logout");
+
     createPostButton.addEventListener("click", validatePostCreation, false);
+    logoutButton.addEventListener("click", utils.logout, false);
 
     docClientS3 = new S3Bucket();
     docClientDynamo = new Dynamo();
@@ -65,8 +76,7 @@ function validatePostCreation() {
 
     var productID = generateID(5);
     var imageID = generateID(5);
-    var tempUserId = '2';
-    doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, tempUserId);
+    doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, userID);
 }
 
 /**
@@ -82,10 +92,11 @@ function validatePostCreation() {
  * @returns void
  */
 async function doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, userID) {
-    const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
-    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemDescription, address, itemName, respS3[1], imageID, itemCategory, userID);
-    const respDynamoWishlist = await docClientDynamo.putProductWishlistWatchEntry(productID);
     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+    const userName = respDyanmoGetUserEntry.Item['FirstName'] + ' ' + respDyanmoGetUserEntry.Item['LastName'];
+    const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
+    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemDescription, address, itemName, respS3[1], imageID, itemCategory, userName, userID);
+    const respDynamoWishlist = await docClientDynamo.putProductWishlistWatchEntry(productID);
     const newProductSellingList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);
     const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
     
