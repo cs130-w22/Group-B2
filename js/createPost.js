@@ -66,7 +66,7 @@ function validatePostCreation() {
     var productID = generateID(5);
     var imageID = generateID(5);
     var tempUserId = '2';
-    doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, tempUserId);
+    doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, tempUserId);
 }
 
 /**
@@ -81,9 +81,9 @@ function validatePostCreation() {
  * @param {String} userID Seller's User ID
  * @returns void
  */
-async function doCreatePostTask(productID, imageID, address, image, itemCost, itemName, itemCategory, userID) {
+async function doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, userID) {
     const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
-    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, address, itemName, respS3[1], imageID, itemCategory, userID);
+    const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemDescription, address, itemName, respS3[1], imageID, itemCategory, userID);
     const respDynamoWishlist = await docClientDynamo.putProductWishlistWatchEntry(productID);
     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
     const newProductSellingList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);

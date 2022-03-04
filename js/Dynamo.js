@@ -106,6 +106,7 @@ export class Dynamo {
      * Creates Parameter function for Dynamo putProductTableEntry function to add product entries
      * @param {String} productID Product ID
      * @param {String} itemCost Cost of the product
+     * @param {String} itemDescription Description of product
      * @param {String} address Address location of the product
      * @param {String} itemName Product Name
      * @param {String} imageUrl Image URL for extracting to display on pages
@@ -114,7 +115,7 @@ export class Dynamo {
      * @param {String} userID Seller's User ID
      * @returns Object
      */
-    makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) {
+    makeProductPutParam(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID) {
         let params = {
             TableName: 'ProductCatalog',
             Item: {
@@ -126,7 +127,8 @@ export class Dynamo {
                 ImageID: String(imageID),
                 ImageUrl: imageUrl,
                 ProductType: String(itemCategory),
-                SellerName: 'cookies'
+                SellerName: 'cookies',
+                Description: itemDescription
             }
         };
         return params;
@@ -218,8 +220,8 @@ export class Dynamo {
      * @param {String} userID Seller's User ID
      * @returns Promise
      */
-    putProductTableEntry(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID) { 
-        let params = this.makeProductPutParam(productID, itemCost, address, itemName, imageUrl, imageID, itemCategory, userID);
+    putProductTableEntry(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID) { 
+        let params = this.makeProductPutParam(productID, itemCost, itemDescription, address, itemName, imageUrl, imageID, itemCategory, userID);
         try {
             const resp = this.client.put(params).promise();
             return resp

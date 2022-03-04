@@ -43,7 +43,7 @@ async function removePostFromTable(userID, productID){
     const indexOfProduct = indexOf(userSellingProductIDList, productID); 
     newProductSellingList; 
     if(indexOfProduct > -1){
-        newProductSellingList = splce(indexOfProduct, 1);
+        newProductSellingList = userSellingProductIDList.splice(indexOfProduct, 1);
     } else {
         newProductSellingList = userSellingProductIDList
     }
