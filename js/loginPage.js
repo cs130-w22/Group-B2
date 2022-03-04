@@ -30,7 +30,6 @@ async function validate()
     //console.log(resp.Item == null);
     if (resp.Item == null){ //Then email does not exist in database
         alert("invalid email or password!");
-        //window.location.href = "./catalog.html";
     }
     else{
         if (resp.Item["Password"] == password){
