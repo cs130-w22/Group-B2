@@ -12,7 +12,7 @@ export function logout() {
  * @param {String} idName ID name for tag
  * @returns Element
  */
- export function createTag(tagName, className, idName) {
+export function createTag(tagName, className, idName) {
 	var tag = document.createElement(tagName);
 	if (className != null) {
 		tag.className = className;
@@ -21,4 +21,15 @@ export function logout() {
 		tag.id = idName;
 	}
 	return tag;
+}
+
+/**
+ * Append val to lst and return the new list with removed empty and null values
+ * @param {Object[]} lst 
+ * @param {Object} val 
+ * @returns Object[]
+ */
+export function arrayAppend(lst, val) {
+    lst.push(val);
+    return lst.filter(item => item);
 }

@@ -64,7 +64,7 @@ export class Dynamo {
     }
 
     /**
-     * Creates Parameter function for Dynamo getTableEntry to get Product Information
+     * Creates Parameter function for Dynamo getTableEntry to get Product Information and Wishlist watch
      * @param {String} tableName Table Name of Dynamo DB
      * @param {String} productID Product ID, key for the table
      * @returns Object
@@ -98,18 +98,40 @@ export class Dynamo {
     }
 
     /**
-     * Creates Parameter function for Dynamo updateTableEntry function to update values
+     * Creates Parameter function for Dynamo updateTableEntry function to update values for User table
      * @param {String} tableName Table Name of Dynamo DB
      * @param {String} userID User Name, key for the table
      * @param {String} attrName Attribute Name of the column
      * @param {String} attrVal Attribute Value of the column
      * @returns Object
      */
-    makeUpdateParam(tableName, userID, attrName, attrVal) {
+    makeUpdateParamUser(tableName, userID, attrName, attrVal) {
         let params = {
             TableName : tableName,
             Key: {
                 "UserID": userID
+            },
+            UpdateExpression: 'set #list = :list',
+            ExpressionAttributeNames: {'#list' : attrName},
+            ExpressionAttributeValues: { ':list' : attrVal }
+        };
+    
+        return params;
+    }
+
+    /**
+     * Creates Parameter function for Dynamo updateTableEntry function to update values Product tables
+     * @param {String} tableName Table Name of Dynamo DB
+     * @param {String} userID User Name, key for the table
+     * @param {String} attrName Attribute Name of the column
+     * @param {String} attrVal Attribute Value of the column
+     * @returns Object
+     */
+     makeUpdateParamProduct(tableName, productID, attrName, attrVal) {
+        let params = {
+            TableName : tableName,
+            Key: {
+                "ProductID": productID
             },
             UpdateExpression: 'set #list = :list',
             ExpressionAttributeNames: {'#list' : attrName},
@@ -242,13 +264,13 @@ export class Dynamo {
      * @param {String} val Value to search of that key
      * @returns Promise
      */
-    getTableEntry(tableName, key, val) {
+    getTableEntry(tableName, val) {
         let params = null;
-        if (key == "UserID") {
+        if (tableName == "UserInformation") {
             params = this.makeUserParam(tableName, val);
-        } else if (key == "ProductID") {
+        } else if (tableName == "ProductCatalog" || tableName == "Wishlist") {
             params = this.makeProductParam(tableName, val);
-        } else if (key == "Email") {
+        } else if (tableName == "UserCred") {
             params = this.makeUserCredParam(tableName, val);
         }
 
@@ -269,7 +291,13 @@ export class Dynamo {
      * @returns Promise
      */
     updateTableEntry(tableName, key, attrName, attrVal) {
-        let params = this.makeUpdateParam(tableName, key, attrName, attrVal);
+        let params = null;
+        if (tableName == "UserInformation") {
+            params = this.makeUpdateParamUser(tableName, key, attrName, attrVal);
+        } else if (tableName == "Wishlist"){
+            params = this.makeUpdateParamProduct(tableName, key, attrName, attrVal);
+        }
+
         try {
             const resp = this.client.update(params).promise();
             return resp;

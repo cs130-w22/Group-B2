@@ -31,7 +31,7 @@ window.onload = function() {
  * @returns void
  */
 async function refresh() {
-    const resp = await docClient.getTableEntry("UserInformation", "UserID", userID);
+    const resp = await docClient.getTableEntry("UserInformation", userID);
     queryEachProductAndGenerateList(userID, resp.Item['Wishlist']);
 }
 
@@ -47,7 +47,7 @@ function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
 
     divWishlist.innerHTML = '';
     listOfItemInWishlist.forEach(async function(productId) {
-        const resp = await docClient.getTableEntry("ProductCatalog", "ProductID", productId);
+        const resp = await docClient.getTableEntry("ProductCatalog", productId);
 
         let liCatalogTag = utils.createTag('li', null, 'idCatalog');
         let divproductRow = utils.createTag('div', null, 'productRow');
@@ -106,11 +106,20 @@ async function onClickRemove(evt) {
 
     let confirmed = window.confirm("Remove product \"" + productName + "\" (ID=" + productId + ") from your wishlist?");
     if (confirmed) {
-        const index = wishlist.indexOf(productId);
-        wishlist.splice(index, 1);
-        const resp = await docClient.updateTableEntry("UserInformation", userID, 'Wishlist', wishlist);
-        let status = resp['$response']['httpResponse']['statusCode'];
-        if (status == 200) {
+        var respGetWishlistWatch = await docClient.getTableEntry('Wishlist', productId);
+        var wishlistWatch = respGetWishlistWatch.Item['ListOfUsers'];
+
+        const indexInUser = wishlist.indexOf(productId);
+        wishlist.splice(indexInUser, 1);
+        const indexWishlist = wishlistWatch.indexOf(userID);
+        wishlistWatch.splice(indexWishlist, 1);
+
+        const respInUser = await docClient.updateTableEntry("UserInformation", userID, 'Wishlist', wishlist);
+        const respWishlist = await docClient.updateTableEntry("Wishlist", productId, 'ListOfUsers', wishlistWatch);
+
+        let statusUser = respInUser['$response']['httpResponse']['statusCode'];
+        let statusWishlist = respWishlist['$response']['httpResponse']['statusCode'];
+        if (statusUser == 200 && statusWishlist == 200) {
             window.alert("Successfully removed \"" + productName + "\" (ID=" + productId + ").");
             refresh();
         } else {

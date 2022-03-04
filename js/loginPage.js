@@ -31,7 +31,7 @@ async function validate()
     var password=document.getElementById("password").value;
 
 
-    const resp = await docClient.getTableEntry("UserCred", "Email", email);
+    const resp = await docClient.getTableEntry("UserCred", email);
     console.log(resp);
     if (resp.Item == null){ //Then email does not exist in database
         alert("invalid email or password!");
