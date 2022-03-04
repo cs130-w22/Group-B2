@@ -56,37 +56,39 @@ export function updateTable(divCatalog, listOfProducts) {
 
 	divCatalog.innerHTML = '';
 	listOfProducts.forEach(function(item) {
-		let liCatalogTag = utils.createTag('li', null, 'idCatalog');
-		let divCatalogTag = utils.createTag('div', null, 'divCatalog');
-		let divLeftTag = utils.createTag('div', null, 'left');
-		let divRightTag = utils.createTag('div', null, 'right');
-		let ulProductInfoTag = utils.createTag('ul', null, 'productInfo');
+		if (item['IsBought'] == "No") {
+			let liCatalogTag = utils.createTag('li', null, 'idCatalog');
+			let divCatalogTag = utils.createTag('div', null, 'divCatalog');
+			let divLeftTag = utils.createTag('div', null, 'left');
+			let divRightTag = utils.createTag('div', null, 'right');
+			let ulProductInfoTag = utils.createTag('ul', null, 'productInfo');
 
-		let info = ["Product: " + item['Product'], 
-					"Seller: " + item['SellerName'], 
-					"Location: " + item['Location'], 
-					"Cost: " + item['Cost']];
+			let info = ["Product: " + item['Product'], 
+						"Seller: " + item['SellerName'], 
+						"Location: " + item['Location'], 
+						"Cost: " + item['Cost']];
 
-		for (let i = 0; i < info.length; i++) {
-			let liTag = utils.createTag('li', null, "liStyle");
-			liTag.innerHTML = info[i];
-			ulProductInfoTag.appendChild(liTag);
+			for (let i = 0; i < info.length; i++) {
+				let liTag = utils.createTag('li', null, "liStyle");
+				liTag.innerHTML = info[i];
+				ulProductInfoTag.appendChild(liTag);
+			}
+
+			let ahref = utils.createTag('a', null, null);
+			let imgTag = utils.createTag('img', null, 'productImage');
+			ahref.href = 'postdes.html?productid=' + item['ProductID'];
+			imgTag.src = item['ImageUrl'];
+			ahref.appendChild(imgTag);
+			divLeftTag.appendChild(ahref);
+			divRightTag.appendChild(ulProductInfoTag);
+
+			divCatalogTag.appendChild(divLeftTag);
+			divCatalogTag.appendChild(divRightTag);
+
+			liCatalogTag.appendChild(divCatalogTag);
+
+			ulCatalogTag.appendChild(liCatalogTag);
 		}
-
-		let ahref = utils.createTag('a', null, null);
-		let imgTag = utils.createTag('img', null, 'productImage');
-		ahref.href = 'postdes.html?productid=' + item['ProductID'];
-		imgTag.src = item['ImageUrl'];
-		ahref.appendChild(imgTag);
-		divLeftTag.appendChild(ahref);
-		divRightTag.appendChild(ulProductInfoTag);
-
-		divCatalogTag.appendChild(divLeftTag);
-		divCatalogTag.appendChild(divRightTag);
-
-		liCatalogTag.appendChild(divCatalogTag);
-
-		ulCatalogTag.appendChild(liCatalogTag);
 	});
 
 	divCatalog.appendChild(ulCatalogTag);
