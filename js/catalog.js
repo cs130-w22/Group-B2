@@ -2,6 +2,8 @@
  * @file Catalog logic file
  */
 import { Dynamo } from "./Dynamo.js"
+import * as cookie from './cookie.js'
+import * as utils from './utils.js'
 
 /**
  * Dynamo Object
@@ -10,13 +12,20 @@ import { Dynamo } from "./Dynamo.js"
 var docClient = null;
 
 window.onload = function() {
+	var userID = cookie.getCookie("UserID");
+	console.log(userID);
+	if (userID == "") {
+		window.alert("You are not logged in. Redirecting to login page.");
+		window.location.href = "./loginPage.html";
+	}
 	let filterButton = document.getElementById("filterButton");
+	let logoutButton = document.getElementById("logout");
 
 	filterButton.addEventListener("click", onClickFilter, false);
+	logoutButton.addEventListener("click", utils.logout, false);
 
 	docClient = new Dynamo();
 }
-
 /**
  * Filter function call logic
  * @returns void
@@ -43,15 +52,15 @@ async function onClickFilter() {
  * @returns void
  */
 export function updateTable(divCatalog, listOfProducts) {
-	let ulCatalogTag = createTag('ul', null, 'ulCatalog');
+	let ulCatalogTag = utils.createTag('ul', null, 'ulCatalog');
 
 	divCatalog.innerHTML = '';
 	listOfProducts.forEach(function(item) {
-		let liCatalogTag = createTag('li', null, 'idCatalog');
-		let divCatalogTag = createTag('div', null, 'divCatalog');
-		let divLeftTag = createTag('div', null, 'left');
-		let divRightTag = createTag('div', null, 'right');
-		let ulProductInfoTag = createTag('ul', null, 'productInfo');
+		let liCatalogTag = utils.createTag('li', null, 'idCatalog');
+		let divCatalogTag = utils.createTag('div', null, 'divCatalog');
+		let divLeftTag = utils.createTag('div', null, 'left');
+		let divRightTag = utils.createTag('div', null, 'right');
+		let ulProductInfoTag = utils.createTag('ul', null, 'productInfo');
 
 		let info = ["Product: " + item['Product'], 
 					"Seller: " + item['SellerName'], 
@@ -59,13 +68,13 @@ export function updateTable(divCatalog, listOfProducts) {
 					"Cost: " + item['Cost']];
 
 		for (let i = 0; i < info.length; i++) {
-			let liTag = createTag('li', null, "liStyle");
+			let liTag = utils.createTag('li', null, "liStyle");
 			liTag.innerHTML = info[i];
 			ulProductInfoTag.appendChild(liTag);
 		}
 
-		let ahref = createTag('a', null, null);
-		let imgTag = createTag('img', null, 'productImage');
+		let ahref = utils.createTag('a', null, null);
+		let imgTag = utils.createTag('img', null, 'productImage');
 		ahref.href = 'postdes.html?productid=' + item['ProductID'];
 		imgTag.src = item['ImageUrl'];
 		ahref.appendChild(imgTag);
@@ -82,22 +91,4 @@ export function updateTable(divCatalog, listOfProducts) {
 
 	divCatalog.appendChild(ulCatalogTag);
 	divCatalog.style.visibility = 'visible';
-}
-
-/**
- * Create tag helper function
- * @param {String} tagName Tag name
- * @param {String} className Class name for tag
- * @param {String} idName ID name for tag
- * @returns Element
- */
-export function createTag(tagName, className, idName) {
-	var tag = document.createElement(tagName);
-	if (className != null) {
-		tag.className = className;
-	}
-	if (idName != null) {
-		tag.id = idName;
-	}
-	return tag;
 }

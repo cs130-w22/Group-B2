@@ -2,6 +2,8 @@
  * @file Wishlist logic file
  */
 import { Dynamo } from "./Dynamo.js"
+import * as cookie from './cookie.js'
+import * as utils from './utils.js'
 
 /**
  * Dynamo Object
@@ -9,8 +11,18 @@ import { Dynamo } from "./Dynamo.js"
  */
 var docClient = null;
 
+var userID = cookie.getCookie("UserID");
+
 window.onload = function() {
+    if (userID == "") {
+		window.alert("You are not logged in. Redirecting to login page.");
+		window.location.href = "./loginPage.html";
+	}
 	docClient = new Dynamo();
+
+    let logoutButton = document.getElementById("logout");
+    logoutButton.addEventListener("click", utils.logout, false);
+    
     refresh();
 }
 
@@ -19,7 +31,6 @@ window.onload = function() {
  * @returns void
  */
 async function refresh() {
-    var userID = '2'
     const resp = await docClient.getTableEntry("UserInformation", "UserID", userID);
     queryEachProductAndGenerateList(userID, resp.Item['Wishlist']);
 }
@@ -32,18 +43,18 @@ async function refresh() {
  */
 function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
     let divWishlist = document.getElementById("wishlist");
-    let ulCatalogTag = createTag('ul', null, 'ulCatalog');
+    let ulCatalogTag = utils.createTag('ul', null, 'ulCatalog');
 
     divWishlist.innerHTML = '';
     listOfItemInWishlist.forEach(async function(productId) {
         const resp = await docClient.getTableEntry("ProductCatalog", "ProductID", productId);
 
-        let liCatalogTag = createTag('li', null, 'idCatalog');
-        let divproductRow = createTag('div', null, 'productRow');
-        let divFirst = createTag('div', null, 'first-div');
-        let divSecond = createTag('div', null, 'second-div');
-        let divThird = createTag('div', null, 'third-div');
-        let ulProductInfoTag = createTag('ul', null, 'productInfo');
+        let liCatalogTag = utils.createTag('li', null, 'idCatalog');
+        let divproductRow = utils.createTag('div', null, 'productRow');
+        let divFirst = utils.createTag('div', null, 'first-div');
+        let divSecond = utils.createTag('div', null, 'second-div');
+        let divThird = utils.createTag('div', null, 'third-div');
+        let ulProductInfoTag = utils.createTag('ul', null, 'productInfo');
 
         let info = ["Product: " + resp.Item['Product'], 
 					"Seller: " + resp.Item['SellerName'], 
@@ -51,18 +62,18 @@ function queryEachProductAndGenerateList(userID, listOfItemInWishlist) {
 					"Cost: " + resp.Item['Cost']];
 
         for (let i = 0; i < info.length; i++) {
-            let liTag = createTag('li', null, "liStyle");
+            let liTag = utils.createTag('li', null, "liStyle");
             liTag.innerHTML = info[i];
             ulProductInfoTag.appendChild(liTag);
         }
 
-        let ahref = createTag('a', null, null);
-		let imgTag = createTag('img', null, 'productImage');
+        let ahref = utils.createTag('a', null, null);
+		let imgTag = utils.createTag('img', null, 'productImage');
 		ahref.href = 'postdes.html?productid=' + productId;
 		imgTag.src = resp.Item['ImageUrl'];
 		ahref.appendChild(imgTag);
 
-        let removeButton = createTag('button', null, 'removeButton');
+        let removeButton = utils.createTag('button', null, 'removeButton');
         removeButton.type = 'button';
         removeButton.innerHTML = 'Remove';
         removeButton.addEventListener("click", onClickRemove, false);
@@ -108,22 +119,4 @@ async function onClickRemove(evt) {
     } else {
         window.alert("Not removing \"" + productName + "\" (ID=" + productId + ").");
     }
-}
-
-/**
- * Create tag helper function
- * @param {String} tagName Tag name
- * @param {String} className Class name for tag
- * @param {String} idName ID name for tag
- * @returns Element
- */
-function createTag(tagName, className, idName) {
-	var tag = document.createElement(tagName);
-	if (className != null) {
-		tag.className = className;
-	}
-	if (idName != null) {
-		tag.id = idName;
-	}
-	return tag;
 }

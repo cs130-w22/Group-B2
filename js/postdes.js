@@ -3,6 +3,8 @@
  */
  import { Dynamo } from "./Dynamo.js"
  import { S3Bucket } from "./S3Bucket.js"
+ import * as cookie from './cookie.js'
+ import * as utils from './utils.js'
 
  /**
   * S3 Object
@@ -15,16 +17,24 @@
   */
  var docClientDynamo = null;
  
- window.onload = function(){
-    docClientDynamo = new Dynamo(); 
-    docClientS3 = new S3Bucket();
+ window.onload = function() {
+   var userID = cookie.getCookie("UserID");
+   if (userID == "") {
+		window.alert("You are not logged in. Redirecting to login page.");
+		window.location.href = "./loginPage.html";
+	}
+   docClientDynamo = new Dynamo(); 
+   docClientS3 = new S3Bucket();
 
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const productid = urlParams.get('productid');
-    getPost(productid);
-    let buyButton = document.getElementById("buy");
-    buyButton.addEventListener("click", pop);
+   let logoutButton = document.getElementById("logout");
+   logoutButton.addEventListener("click", utils.logout, false);
+
+   const queryString = window.location.search;
+   const urlParams = new URLSearchParams(queryString);
+   const productid = urlParams.get('productid');
+   getPost(productid);
+   let buyButton = document.getElementById("buy");
+   buyButton.addEventListener("click", pop);
  } 
 
 /**

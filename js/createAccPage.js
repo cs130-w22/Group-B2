@@ -10,13 +10,6 @@ var crypto = require("crypto");
  */
 var docClientDynamo = null;
 
-// function setCookie(name, exdays) {
-//     var exdate = new Date();
-//     exdate.setDate(exdate.getDate() + exdays);
-//     var exp_value = "; expires=" + exdate.toUTCString() + "; path=/";
-//     document.cookie = "UserID=" + generateID(5) + "; SellerName=" + name + exp_value;
-// }
-
 /**
  * Generate an ID given length
  * @param {Number} length Length of ID
@@ -69,10 +62,8 @@ function validate()
         alert("password must be 6 or more characters");
         return false;
     } 
-    //setCookie(firstName+lastName, 1); 
 
     doCreateUserTask(firstName, lastName, email, phoneNumber, streetAddr, password);
-    
 }
 
 /**
@@ -88,16 +79,14 @@ function validate()
 async function doCreateUserTask(firstName, lastName, email, phone, street, password) {
     if (await checkIfRepeat(email)){
         window.alert("Account with email already exists! Please log in");
-    }
-    else{
+    } else{
         var userID = generateID(5);
         const respDynamoAddUser = await docClientDynamo.putUserEntry(firstName, lastName, email, phone, street, password, userID);
-        console.log(respDynamoAddUser);
         const respDynamoAddUserCred = await docClientDynamo.putUserCredEntry(email, password, userID);
-        console.log(respDynamoAddUserCred);
 
         if (respDynamoAddUser['$response']['httpResponse']['statusCode'] == 200 && respDynamoAddUserCred['$response']['httpResponse']['statusCode'] == 200) {
-            window.location.href = "./catalog.html";
+            window.alert("Account created! Redirecting to login page and please login.");
+            window.location.href = "./loginPage.html";
         } else {
             window.alert("Error in creating user! Please try again.");
         }
@@ -114,8 +103,7 @@ async function checkIfRepeat(email){
     console.log(resp.Item);
     if (resp.Item != null){
         return true;    //email already exists in database
-    }
-    else{
+    } else {
         return false;
     }
 }
