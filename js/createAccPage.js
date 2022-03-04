@@ -99,7 +99,7 @@ async function doCreateUserTask(firstName, lastName, email, phone, street, passw
 * @returns boolean
 */
 async function checkIfRepeat(email){
-    const resp = await docClientDynamo.getTableEntry("UserCred", "Email", email);
+    const resp = await docClientDynamo.getTableEntry("UserCred", email);
     console.log(resp.Item);
     if (resp.Item != null){
         return true;    //email already exists in database

@@ -1,73 +1,106 @@
 /**
  * @file Post Description Page
  */
- import { Dynamo } from "./Dynamo.js"
- import { S3Bucket } from "./S3Bucket.js"
- import * as cookie from './cookie.js'
- import * as utils from './utils.js'
+import { Dynamo } from "./Dynamo.js"
+import { S3Bucket } from "./S3Bucket.js"
+import * as cookie from './cookie.js'
+import * as utils from './utils.js'
 
- /**
-  * S3 Object
-  * @type {S3}
-  */
- var docClientS3 = null;
- /**
-  * Dynamo Object
-  * @type {Dynamo}
-  */
- var docClientDynamo = null;
- 
- window.onload = function() {
-   var userID = cookie.getCookie("UserID");
+/**
+ * S3 Object
+ * @type {S3}
+ */
+var docClientS3 = null;
+/**
+ * Dynamo Object
+ * @type {Dynamo}
+ */
+var docClientDynamo = null;
+/**
+ * User ID
+ * @type {String}
+ */
+const userID = cookie.getCookie("UserID");
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+/**
+ * Product ID
+ * @type {String}
+ */
+const productID = urlParams.get('productid');
+
+window.onload = function() {
    if (userID == "") {
-		window.alert("You are not logged in. Redirecting to login page.");
-		window.location.href = "./loginPage.html";
-	}
+      window.alert("You are not logged in. Redirecting to login page.");
+      window.location.href = "./loginPage.html";
+   }
    docClientDynamo = new Dynamo(); 
    docClientS3 = new S3Bucket();
 
    let logoutButton = document.getElementById("logout");
    logoutButton.addEventListener("click", utils.logout, false);
 
-   const queryString = window.location.search;
-   const urlParams = new URLSearchParams(queryString);
-   const productid = urlParams.get('productid');
-   getPost(productid);
+   getPost();
+
    let buyButton = document.getElementById("buy");
+   let wishlistButton = document.getElementById("addToWishlist");
+
    buyButton.addEventListener("click", pop);
- } 
+   wishlistButton.addEventListener("click", addToWishlist);
+} 
 
 /**
  * posts description 
  * @returns void
  */
- async function getPost(productID){
-    const respDyanmoGetProductEntry = await docClientDynamo.getTableEntry("ProductCatalog","ProductID",productID);
-    console.log(respDyanmoGetProductEntry);
-    const cost = respDyanmoGetProductEntry.Item.Cost;
-    const location = respDyanmoGetProductEntry.Item.Location;
-    const product = respDyanmoGetProductEntry.Item.Product;
-    const image = respDyanmoGetProductEntry.Item.ImageUrl;
-    const seller = respDyanmoGetProductEntry.Item.SellerName;
-    const desc = respDyanmoGetProductEntry.Item.Description;
-    const userID = respDyanmoGetProductEntry.Item.UserID;
-    document.getElementById("cost").innerHTML = "$" + cost;
-    document.getElementById("location").innerHTML = "Location: " + location;
-    document.getElementById("product_name").innerHTML = product;
-    document.getElementById("name").innerHTML = "Seller's Name: " + seller;
-    document.getElementById("image").src = image;
-    document.getElementById("description").innerHTML = desc;
-    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
-    console.log(respDyanmoGetUserEntry);
-    const phone = respDyanmoGetUserEntry.Item.PhoneNumber;
-    const email = respDyanmoGetUserEntry.Item.Email;
-    document.getElementById("phone").innerHTML = "Phone Number: " + phone;
-    document.getElementById("email").innerHTML = "Email: " + email;
-    document.getElementById("profile").href = "/myprofile.html?userid=" + userID;
+async function getPost(){
+   const respDyanmoGetProductEntry = await docClientDynamo.getTableEntry("ProductCatalog", productID);
+
+   const cost = respDyanmoGetProductEntry.Item.Cost;
+   const location = respDyanmoGetProductEntry.Item.Location;
+   const product = respDyanmoGetProductEntry.Item.Product;
+   const image = respDyanmoGetProductEntry.Item.ImageUrl;
+   const seller = respDyanmoGetProductEntry.Item.SellerName;
+   const desc = respDyanmoGetProductEntry.Item.Description;
+   const userID = respDyanmoGetProductEntry.Item.UserID;
+   document.getElementById("cost").innerHTML = "$" + cost;
+   document.getElementById("location").innerHTML = "Location: " + location;
+   document.getElementById("product_name").innerHTML = product;
+   document.getElementById("name").innerHTML = "Seller's Name: " + seller;
+   document.getElementById("image").src = image;
+   document.getElementById("description").innerHTML = desc;
+   const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
+
+   const phone = respDyanmoGetUserEntry.Item.PhoneNumber;
+   const email = respDyanmoGetUserEntry.Item.Email;
+   document.getElementById("phone").innerHTML = "Phone Number: " + phone;
+   document.getElementById("email").innerHTML = "Email: " + email;
+   //document.getElementById("profile").href = "/myprofile.html?userid=" + userID;
 }
 
 async function pop() {
    if(confirm("Do you wish to proceed buying the product?")){
       window.location.href =  "./myprofile.html";
    }
- }
+}
+
+async function addToWishlist() {
+   if(confirm("Do you wish add this product to your wishlist?")){
+      const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
+      const respDyanmoGetProductWishlist = await docClientDynamo.getTableEntry("Wishlist", productID);
+
+      var newWishlistFromUser = utils.arrayAppend(respDyanmoGetUserEntry.Item['Wishlist'], productID);
+      var newWishlistWatch = utils.arrayAppend(respDyanmoGetProductWishlist.Item['ListOfUsers'], userID);
+
+      const respUpdateUserWishlist = await docClientDynamo.updateTableEntry('UserInformation', userID, 'Wishlist', newWishlistFromUser);
+      const respUpdateWishlistWatch = await docClientDynamo.updateTableEntry('Wishlist', productID, 'ListOfUsers', newWishlistWatch);
+
+      if (respUpdateUserWishlist['$response']['httpResponse']['statusCode'] == 200 &&
+          respUpdateWishlistWatch['$response']['httpResponse']['statusCode'] == 200) {
+         window.alert("Product added to your wishlist!");
+      } else {
+         window.alert("Something went wrong...");
+      }
+   }
+}

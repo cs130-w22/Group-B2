@@ -92,7 +92,7 @@ function validatePostCreation() {
  * @returns void
  */
 async function doCreatePostTask(productID, imageID, itemDescription, address, image, itemCost, itemName, itemCategory, userID) {
-    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
     const userName = respDyanmoGetUserEntry.Item['FirstName'] + ' ' + respDyanmoGetUserEntry.Item['LastName'];
     const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
     const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemDescription, address, itemName, respS3[1], imageID, itemCategory, userName, userID);
@@ -102,7 +102,7 @@ async function doCreatePostTask(productID, imageID, itemDescription, address, im
     
     console.log(respDynamoWishlist);
     if (respDynamoAddProductToCatalog['$response']['httpResponse']['statusCode'] == 200 && 
-    respDynamoWishlist['$response']['httpResponse']['statusCode'] == 200 && 
+        respDynamoWishlist['$response']['httpResponse']['statusCode'] == 200 && 
         respDynamoAddProductToUser['$response']['httpResponse']['statusCode'] == 200 &&
         respS3[0]['status'] == 200) {
         window.alert("Post uploaded! Check the catalog to see your post!");
