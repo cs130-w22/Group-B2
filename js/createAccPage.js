@@ -97,7 +97,8 @@ async function doCreateUserTask(firstName, lastName, email, phone, street, passw
         console.log(respDynamoAddUserCred);
 
         if (respDynamoAddUser['$response']['httpResponse']['statusCode'] == 200 && respDynamoAddUserCred['$response']['httpResponse']['statusCode'] == 200) {
-            window.location.href = "./catalog.html";
+            window.alert("Congratulations! Account created. Please sign in.");
+            window.location.href = "./loginPage.html";
         } else {
             window.alert("Error in creating user! Please try again.");
         }
