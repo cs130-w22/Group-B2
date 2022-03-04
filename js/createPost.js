@@ -97,7 +97,7 @@ async function doCreatePostTask(productID, imageID, itemDescription, address, im
     const respS3 = await getPresignedAndUpload(productID + "/" + imageID, image);
     const respDynamoAddProductToCatalog = await docClientDynamo.putProductTableEntry(productID, itemCost, itemDescription, address, itemName, respS3[1], imageID, itemCategory, userName, userID);
     const respDynamoWishlist = await docClientDynamo.putProductWishlistWatchEntry(productID);
-    const newProductSellingList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);
+    const newProductSellingList = utils.arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSelling'], productID);
     const respDynamoAddProductToUser = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
     
     console.log(respDynamoWishlist);
@@ -111,17 +111,6 @@ async function doCreatePostTask(productID, imageID, itemDescription, address, im
         "Dynamo Status: " + respDynamo['$response']['httpResponse']['statusCode'] + "\n" + 
         "S3 Status: " + respS3[0]['status']);
     }
-}
-
-/**
- * Append val to lst and return the new list with removed empty and null values
- * @param {Object[]} lst 
- * @param {Object} val 
- * @returns Object[]
- */
-function arrayAppend(lst, val) {
-    lst.push(val);
-    return lst.filter(item => item);
 }
 
 /**
