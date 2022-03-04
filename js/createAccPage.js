@@ -71,8 +71,7 @@ function validate()
     } 
     //setCookie(firstName+lastName, 1); 
 
-    var userID = generateID(5);
-    doCreateUserTask(firstName, lastName, email, phoneNumber, streetAddr, password, userID);
+    doCreateUserTask(firstName, lastName, email, phoneNumber, streetAddr, password);
     
 }
 
@@ -84,18 +83,39 @@ function validate()
 * @param {String} phone User's phone number
 * @param {String} street User's street address
 * @param {String} password User's password
-* @param {String} userID Unique user ID
 * @returns void
 */
-async function doCreateUserTask(firstName, lastName, email, phone, street, password, userID) {
-    const respDynamoAddUser = await docClientDynamo.putUserEntry(firstName, lastName, email, phone, street, password, userID);
-    console.log(respDynamoAddUser);
-    const respDynamoAddUserCred = await docClientDynamo.putUserCredEntry(email, password, userID);
-    console.log(respDynamoAddUserCred);
+async function doCreateUserTask(firstName, lastName, email, phone, street, password) {
+    if (await checkIfRepeat(email)){
+        window.alert("Account with email already exists! Please log in");
+    }
+    else{
+        var userID = generateID(5);
+        const respDynamoAddUser = await docClientDynamo.putUserEntry(firstName, lastName, email, phone, street, password, userID);
+        console.log(respDynamoAddUser);
+        const respDynamoAddUserCred = await docClientDynamo.putUserCredEntry(email, password, userID);
+        console.log(respDynamoAddUserCred);
 
-    if (respDynamoAddUser['$response']['httpResponse']['statusCode'] == 200 && respDynamoAddUserCred['$response']['httpResponse']['statusCode'] == 200) {
-        window.location.href = "./catalog.html";
-    } else {
-        window.alert("Error in creating user! Please try again.");
+        if (respDynamoAddUser['$response']['httpResponse']['statusCode'] == 200 && respDynamoAddUserCred['$response']['httpResponse']['statusCode'] == 200) {
+            window.location.href = "./catalog.html";
+        } else {
+            window.alert("Error in creating user! Please try again.");
+        }
+    }
+}
+
+/**
+* Checks the user database when creating an account, to make sure email is not already in use
+* @param {String} email User's ucla email address
+* @returns boolean
+*/
+async function checkIfRepeat(email){
+    const resp = await docClientDynamo.getTableEntry("UserCred", "Email", email);
+    console.log(resp.Item);
+    if (resp.Item != null){
+        return true;    //email already exists in database
+    }
+    else{
+        return false;
     }
 }
