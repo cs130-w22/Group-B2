@@ -24,12 +24,6 @@ body {
    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js" ></script>
 
 <script>
-AWS.config.update({
-  region: "us-west-1",
-  endpoint: 'https://dynamodb.us-west-1.amazonaws.com',
-  accessKeyId: "AKIA3T6BBSSA7KSQ5FEU",
-  secretAccessKey: "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"
-});
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 var productID;
