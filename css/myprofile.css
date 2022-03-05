@@ -147,3 +147,18 @@ section {
   border-radius: 20%;
 }
 
+input[type=submit] { 
+  background:#2D68C4;
+  color:#fff;
+  border:1pxsolid#eee;
+  border-radius:30px;
+  box-shadow:5px5px5px#eee;
+  text-shadow:none;
+  font-size: 14px;
+  position: center; 
+}
+
+.upload-photo-buton {
+  float: center;
+  position: relative; 
+}

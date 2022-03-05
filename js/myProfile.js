@@ -31,11 +31,7 @@ window.onload = function(){
     docClientDynamo = new Dynamo(); 
     docClientS3 = new S3Bucket(); 
     const response = getUserInfo(userID);
-    console.log(response);
-    console.log("hi");
     response.then(result => populateUserData(result));
-
-    //const producLists = populateUserData()
 } 
 
 /**
@@ -96,31 +92,19 @@ async function populateUserData(result) {
     let p3 = utilities.createTag('p', null, null);
     let p4 = utilities.createTag('p', null, null);
     
-    let user_firstname = document.createTextNode(result.Item.FirstName);
-    let user_lastname = document.createTextNode(result.Item.LastName);
+    let user_fullname = document.createTextNode(result.Item.FirstName + " " + result.Item.LastName);
     let user_email = document.createTextNode(result.Item.Email);
     let user_phone = document.createTextNode(result.Item.PhoneNumber);
     
-    //let user_fullname = user_firstname.concat(' ');
-    //user_fullname = user_fullname.concat(user_lastname);
-
-    p.appendChild(user_firstname);
+    p.appendChild(user_fullname);
     userInfoSquare.appendChild(p);
-    p2.appendChild(user_lastname);
-    userInfoSquare.appendChild(p2);
     p3.appendChild(user_email);
     userInfoSquare.appendChild(p3);
     p4.appendChild(user_phone);
     userInfoSquare.appendChild(p4);
 
-    console.log(result.Item.ListofProductIDSelling[0]);
-
-    console.log('before displayPost(current_post) which is ');
-    
     let postsSquare = document.getElementById("postsSquare");
     await displayPosts(postsSquare, result.Item.ListofProductIDSelling);
-    console.log('does then work');
-
 }
 
 /**
@@ -138,7 +122,7 @@ async function populateUserData(result) {
         product_list.push(product.Item);
         
 	}
-    console.log(product_list)
+    //console.log(product_list)
     Catalog.updateTable(divPostsSquare, product_list)
 
  }
