@@ -5,7 +5,8 @@ import { utils } from "hash.js";
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as utilities from './utils.js'
-
+import * as cookie from './cookie.js'
+import * as Catalog from "./catalog.js"
 
 /**
  * S3 Object
@@ -17,18 +18,24 @@ var docClientS3 = null;
  * @type {Dynamo}
  */
 var docClientDynamo = null;
+var userID = cookie.getCookie("UserID");
 
-var id = "a6079e34ec";
-
-
+//var id = "a6079e34ec";
+//var id = "22905ee334";
 
 window.onload = function(){
+    if (userID == "") {
+		window.alert("You are not logged in. Redirecting to login page.");
+		window.location.href = "./loginPage.html";
+	}
     docClientDynamo = new Dynamo(); 
     docClientS3 = new S3Bucket(); 
-    const response = getUserInfo(id);
+    const response = getUserInfo(userID);
     console.log(response);
     console.log("hi");
     response.then(result => populateUserData(result));
+
+    //const producLists = populateUserData()
 } 
 
 /**
@@ -80,25 +87,22 @@ async function getUserInfo(userID){
     return entry;
 }
 
-function populateUserData(result) {
+async function populateUserData(result) {
     result.Item.Address
     let userInfoSquare = document.getElementById("userInfoSquare");
-    let userNameSquare = document.getElementById("userNameSquare");
-
-    let h2 = utilities.createTag('h', null, null);
+    
     let p  = utilities.createTag('p', null, null);
     let p2 = utilities.createTag('p', null, null);
     let p3 = utilities.createTag('p', null, null);
     let p4 = utilities.createTag('p', null, null);
     
-
     let user_firstname = document.createTextNode(result.Item.FirstName);
     let user_lastname = document.createTextNode(result.Item.LastName);
     let user_email = document.createTextNode(result.Item.Email);
     let user_phone = document.createTextNode(result.Item.PhoneNumber);
     
-    h2.appendChild(user_firstname);
-    userNameSquare.appendChild(h2);
+    //let user_fullname = user_firstname.concat(' ');
+    //user_fullname = user_fullname.concat(user_lastname);
 
     p.appendChild(user_firstname);
     userInfoSquare.appendChild(p);
@@ -109,13 +113,33 @@ function populateUserData(result) {
     p4.appendChild(user_phone);
     userInfoSquare.appendChild(p4);
 
+    console.log(result.Item.ListofProductIDSelling[0]);
 
-    //For tag/posts purposes
-    let user_selling_list = document.createTextNode(result.Item.ListofProductIDSelling);
-    let user_sold_list = document.createTextNode(result.Item.ListofProductIDSold);
-    let user_user_id = document.createTextNode(result.Item.UserID);
+    console.log('before displayPost(current_post) which is ');
     
-    
-
+    let postsSquare = document.getElementById("postsSquare");
+    await displayPosts(postsSquare, result.Item.ListofProductIDSelling);
+    console.log('does then work');
 
 }
+
+/**
+ * Update table helper function
+ * @param {Object} divPostsSquare Div tag to update table
+ * @param {Object[]} listOfProducts List of all queried products from Dynamo DB
+ * @returns void
+ */
+ async function displayPosts(divPostsSquare, listOfProductIDs) {
+
+    let product_list = [];
+	
+    for (let i = 0; i < listOfProductIDs.length; i++){
+        let product =  await docClientDynamo.getTableEntry('ProductCatalog', listOfProductIDs[i]);
+        product_list.push(product.Item);
+        
+	}
+    console.log(product_list)
+    Catalog.updateTable(divPostsSquare, product_list)
+
+ }
+
