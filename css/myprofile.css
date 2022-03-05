@@ -106,3 +106,43 @@ section {
   float: right;
   width: 50%;
 }
+
+#divCatalog {
+  visibility: visible;
+}
+#idCatalog {
+  border: 2px solid #F2A900;;
+}
+#left {
+  width: 30%; 
+  height: 200px; 
+  float: left; 
+  position: relative;
+}
+#right {
+  margin-left: 30%; 
+  height: 200px; 
+}
+#productInfo {
+  text-align: center;
+  padding: 15px;
+}
+
+#liStyle {
+  border-radius: 190px;
+  background: #9eb2f3;
+  border: 5px solid #F2A900;
+  padding: 5px;
+  width: 50%;
+  margin: auto;
+}
+
+#productImage {
+  position: relative;
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20%;
+}
