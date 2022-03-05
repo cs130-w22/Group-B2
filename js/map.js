@@ -1,5 +1,5 @@
 
-//src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWarAfp7KYCDyJXdnWyYWaQOGgzKRfp8Q&callback=initMap&v=weekly&channel=2"
+
 import { Dynamo } from "./Dynamo.js"
 var dotenv = require("dotenv");
 
