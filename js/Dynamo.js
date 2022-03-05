@@ -410,5 +410,18 @@ export class Dynamo {
             console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
         }
     }
+
+    scanTable(tableName) {
+        let params = {
+            TableName: tableName
+        };
+
+        try {
+            const resp = this.client.scan(params).promise();
+            return resp;
+        } catch (err) {
+            console.error("Unable to put. Error:", JSON.stringify(err, null, 2));
+        }
+    }
 }
 

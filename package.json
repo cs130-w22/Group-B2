@@ -10,7 +10,8 @@
     "build-createAccount": "browserify js/createAccPage.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleCreateAccount.js",
     "build-login": "browserify js/loginPage.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleLogin.js",
     "build-postDes": "browserify js/postdes.js js/S3Bucket.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundlePostDes.js",
-    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost && npm run build-myProfile && npm run build-postDes && npm run build-login && npm run build-createAccount",
+    "build-map": "browserify js/map.js js/Dynamo.js -t [ @sethvincent/dotenvify --path ./.env ] -p esmify > bundle/bundleMap.js",
+    "build": "npm run build-catalog && npm run build-wishlist && npm run build-createPost && npm run build-myProfile && npm run build-postDes && npm run build-login && npm run build-createAccount && npm run build-map",
     "test": "jest"
   },
   "keywords": [],
@@ -22,6 +23,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.0.0",
     "esmify": "^2.1.1",
+    "google-maps": "^4.3.3",
     "jest": "^27.5.1",
     "require": "^0.4.4"
   },
