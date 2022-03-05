@@ -18,10 +18,12 @@ var docClientS3 = null;
  * @type {Dynamo}
  */
 var docClientDynamo = null;
-var userID = cookie.getCookie("UserID");
 
-//var id = "a6079e34ec";
-//var id = "22905ee334";
+/**
+ * User ID
+ * @type {String}
+ */
+var userID = cookie.getCookie("UserID");
 
 window.onload = function(){
     if (userID == "") {
@@ -77,12 +79,21 @@ async function removePostFromTable(userID, productID){
      
 }
 
-
+/**
+ * Gets user information from a user's profile in the database 
+ * @param {String} userID Seller's User ID
+ * @returns Promise
+ */
 async function getUserInfo(userID){
     const entry = await docClientDynamo.getTableEntry("UserInformation", userID);
     return entry;
 }
 
+/**
+ * Create tags to display user information in profile
+ * @param {Promise} result
+ * @returns void
+ */
 async function populateUserData(result) {
     result.Item.Address
     let userInfoSquare = document.getElementById("userInfoSquare");
@@ -108,7 +119,7 @@ async function populateUserData(result) {
 }
 
 /**
- * Update table helper function
+ * Display posts of current user of items available for sale, uses helper function from catalog
  * @param {Object} divPostsSquare Div tag to update table
  * @param {Object[]} listOfProducts List of all queried products from Dynamo DB
  * @returns void
