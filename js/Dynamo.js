@@ -151,6 +151,7 @@ export class Dynamo {
      * @param {String} imageUrl Image URL for extracting to display on pages
      * @param {String} imageID Image ID stored in S3 bucket
      * @param {String} itemCategory Category code
+     * @param {String} userName Seller's name
      * @param {String} userID Seller's User ID
      * @returns Object
      */
@@ -310,11 +311,13 @@ export class Dynamo {
      * Put product entry into Dynamo DB 
      * @param {String} productID Product ID
      * @param {String} itemCost Cost of the product
+     * @param {String} itemDescription Description of the product
      * @param {String} address Address location of the product
      * @param {String} itemName Product Name
      * @param {String} imageUrl Image URL for extracting to display on pages
      * @param {String} imageID Image ID stored in S3 bucket
      * @param {String} itemCategory Category code
+     * @param {String} userName Seller's name
      * @param {String} userID Seller's User ID
      * @returns Promise
      */
@@ -411,6 +414,11 @@ export class Dynamo {
         }
     }
 
+    /**
+     * Scan all entries in table given table name
+     * @param {String} tableName Table Name
+     * @returns Promise
+     */
     scanTable(tableName) {
         let params = {
             TableName: tableName
