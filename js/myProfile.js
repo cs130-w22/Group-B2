@@ -50,34 +50,88 @@ function arrayAppend(lst, val) {
 /**
  * Removes product information from a user's profile in the database 
  * @param {String} productID Product ID
- * @param {String} userID Seller's User ID
+ * @param {Boolean} bought signifies if the item has been purhcased
  * @returns void
  */
-async function removePostFromTable(userID, productID){
-    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', 'UserID', userID);
+async function removePostFromTable(productID, bought){
+    console.log("delete post requested")
+    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
     const userSellingProductIDList = respDyanmoGetUserEntry.Item['ListofProductIDSelling']
-    const indexOfProduct = indexOf(userSellingProductIDList, productID); 
-    newProductSellingList; 
-    if(indexOfProduct > -1){
-        newProductSellingList = userSellingProductIDList.splice(indexOfProduct, 1);
-    } else {
-        newProductSellingList = userSellingProductIDList
+
+    let newUserSellingProductIDList = []
+    for(let i = 0; i < userSellingProductIDList.length; i++){
+        if(userSellingProductIDList[i] != productID)
+        arrayAppend(newUserSellingProductIDList, userSellingProductIDList[i])
     }
-    const respDynamoRemoveProductToUserSelling = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newProductSellingList);
+
+    const respDynamoRemoveProductToUserSelling = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newUserSellingProductIDList);
+    const respDynamoDeleteProductFromCatalog = await docClientDynamo.deleteProductTableEntry(productID);
+
+    //removeFromWishlists(productID)
+    if(bought){
     const userSoldProductIDList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSold'], productID);
     const respDynamoAddProductToUserSoldList = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSold', userSoldProductIDList);
-
-    const respDynamoDeleteProductFromCatalog = await docClientDynamo.deleteProductTableEntry(productID); 
-
-    if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
-        respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
-        respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
-        window.alert("Post successfully removed");
+        
+        if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
+            respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
+            respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
+            window.alert("Successfully purchased!");
+            window.location.href = "./myProfile.html"
+        } else {
+            window.alert("Something went wrong...\n");
+        }
     } else {
-        window.alert("Something went wrong...\n");
+        if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
+            respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
+            window.alert("Post successfully removed");
+            window.location.href = "./myProfile.html"
+        } else {
+            window.alert("Something went wrong...\n");
+        }
     }
+
+    
      
 }
+
+// /**
+//  * Removes product from every user wishlist that has it 
+//  * @param {String} productID Product ID
+//  * @returns void
+//  */
+// async function removeFromWishlists(productID){
+//     const respWishListLookUp = await docClientDynamo.getTableEntry('Wishlist', productID)
+//     const usersWithProductInWishlist = respWishListLookUp.Item['ListOfUsers']
+//     for(let i = 0; i < usersWithProductInWishlist.length; i++){
+//         if(!removeFromSingleWishlist(usersWithProductInWishlist[i], productID)){
+//             window.alert("error removing from a wishlist")
+//         }
+//     }
+//     if (respWishListLookUp['$response']['httpResponse']['statusCode'] != 200){
+//         window.alert("error finding item in wishlist table")
+//     }
+// }
+
+// /**
+//  * Removes product from a specific user ID's wishlist 
+//  * @param {String} userID user id 
+//  * @param {String} productID Product ID
+//  * @returns Boolean
+//  */
+// async function removeFromSingleWishlist(userID, productID){
+//     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
+//     const wishlistItems = respDyanmoGetUserEntry.Item['Wishlist']
+//     let updatedWishlist = []
+//     for(let i = 0; i < wishlistItems.length; i++){
+//         if(wishlistItems[i] != productID)
+//         arrayAppend(updatedWishlist, wishlistItems[i])
+//     }
+//     const respDynamoUpdatedWishlist = await docClientDynamo.updateTableEntry('UserInformation', userID, 'Wishlist', updatedWishlist);
+//     if (respDynamoUpdatedWishlist['$response']['httpResponse']['statusCode'] == 200){
+//         return true;
+//     }
+//     return false;
+// }
 
 /**
  * Gets user information from a user's profile in the database 
@@ -134,7 +188,16 @@ async function populateUserData(result) {
         
 	}
     //console.log(product_list)
-    Catalog.updateTable(divPostsSquare, product_list)
+    Catalog.updateTable(divPostsSquare, product_list, true);
+
+    for(let i = 0; i < listOfProductIDs.length; i++){
+        const classElems = document.getElementsByClassName(listOfProductIDs[i]);
+        for(let j = 0; j < classElems.length; j++){
+            classElems[j].addEventListener('click', function () {
+                removePostFromTable(listOfProductIDs[i], false);
+            })
+        }
+    }
 
  }
 

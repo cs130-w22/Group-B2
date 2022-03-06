@@ -336,8 +336,8 @@ export class Dynamo {
     makeProductDeleteParam(productID){
         let params = {
             TableName: 'ProductCatalog',
-            Item: {
-                ProductID: productID,
+            Key: {
+                "ProductID": productID,
             }
         };
         return params;
