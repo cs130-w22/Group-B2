@@ -1,12 +1,15 @@
 /**
  * @file profile page logic 
  */
+
+
 import { utils } from "hash.js";
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as utilities from './utils.js'
 import * as cookie from './cookie.js'
 import * as Catalog from "./catalog.js"
+
 
 /**
  * S3 Object
@@ -106,8 +109,8 @@ async function removePostFromTable(productID, bought){
  * @param {String} productID Product ID
  * @returns Boolean
  */
-export function removeFromWishlists(productID){
-    const respWishListLookUp = docClientDynamo.getTableEntry('Wishlist', productID)
+async function removeFromWishlists(productID){
+    const respWishListLookUp = await docClientDynamo.getTableEntry('Wishlist', productID)
     const usersWithProductInWishlist = respWishListLookUp.Item['ListOfUsers']
     for(let i = 0; i < usersWithProductInWishlist.length; i++){
         if(!removeFromSingleWishlist(usersWithProductInWishlist[i], productID)){
@@ -121,6 +124,8 @@ export function removeFromWishlists(productID){
     }
     return true 
 }
+
+module.exports.removeFromWishlists = removeFromWishlists;
 
 /**
  * Removes product from a specific user ID's wishlist 
@@ -210,4 +215,5 @@ async function populateUserData(result) {
     }
 
  }
+
 

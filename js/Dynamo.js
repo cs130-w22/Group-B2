@@ -239,6 +239,7 @@ export class Dynamo {
         return params;
     }
 
+
     /**
      * Queries Dynamo DB table
      * @param {String} tableName Table Name
@@ -272,7 +273,7 @@ export class Dynamo {
             params = this.makeProductParam(tableName, val);
         } else if (tableName == "UserCred") {
             params = this.makeUserCredParam(tableName, val);
-        }
+        } 
 
         try {
             const resp = this.client.get(params).promise();
@@ -295,6 +296,8 @@ export class Dynamo {
         if (tableName == "UserInformation") {
             params = this.makeUpdateParamUser(tableName, key, attrName, attrVal);
         } else if (tableName == "Wishlist"){
+            params = this.makeUpdateParamProduct(tableName, key, attrName, attrVal);
+        } else if( tableName == "ProductCatalog"){
             params = this.makeUpdateParamProduct(tableName, key, attrName, attrVal);
         }
 

@@ -5,7 +5,7 @@ import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as cookie from './cookie.js'
 import * as utils from './utils.js'
-import * as myProfile from './myProfile.js'
+import * as prof from './myProfile.js'
 
 /**
  * S3 Object
@@ -21,7 +21,7 @@ var docClientDynamo = null;
  * User ID
  * @type {String}
  */
-const userID = cookie.getCookie("UserID");
+var userID = cookie.getCookie("UserID");
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
@@ -89,21 +89,21 @@ async function getPost(){
 async function purchaseProduct() {
    if(confirm("Do you wish to proceed buying the product?")){
       // change isBought to yes for product ID
-      const respDyanmoUpdateProductEntry = await docClientDynamo.updateTableEntry('ProductTable', productID, 'isBought', 'yes');
-
+      const respDyanmoUpdateProductEntry = await docClientDynamo.updateTableEntry('ProductCatalog', productID, 'isBought', 'yes');
+      console.log('1')
       // remove product ID from all wishlists 
-      const removeFromWishlists = myProfile.removeFromWishlists(productID)
-
+      const removeFromWishlists = await prof.removeFromWishlists(productID)   
+      console.log('2')
       // get seller ID
-      const respDynamoGetProductTableEntry = await docClientDynamo.getTableEntry('ProductTable', productID);
+      const respDynamoGetProductTableEntry = await docClientDynamo.getTableEntry('ProductCatalog', productID);
       const sellerID = respDynamoGetProductTableEntry.Item['UserID']
-
+      console.log('3')
       // get seller ListofProductIDSelling && ListofProductIDSold
       const respDynamoGetSellerEntry = await docClientDynamo.getTableEntry('UserInformation', sellerID)
       const sellerProductIDSellingList = respDyanmoGetProductEntry.Item['ListofProductIDSelling']
       let newSellerProductIDSellingList = []
       let newSellerProductIDSoldList = respDynamoGetProductEntry.Item['ListofProductIDSold']
-
+      console.log('4')
       // update the lists appropriately 
       for(let i = 0; i < sellerProductIDSellingList.length; i++){
          if(sellerProductIDSellingList[i] == productID){
@@ -115,7 +115,7 @@ async function purchaseProduct() {
 
       const respDynamoUpdateSellerProductSellingList = await docClientDynamo.updateTableEntry('UserInformation', sellerID, 'ListofProductIDSelling', newSellerProductIDSellingList)
       const respDynamoUpdateSellerProductSoldList = await docClientDynamo.updateTableEntry('UserInformation', sellerID, 'ListofProductIDSold', newSellerProductIDSoldList)
-
+      console.log('5')
       // error check
       if (respDyanmoUpdateProductEntry['$response']['httpResponse']['statusCode'] == 200 && removeFromWishlists 
          && respDynamoGetSellerEntry['$response']['httpResponse']['statusCode'] == 200 
