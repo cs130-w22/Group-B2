@@ -1,94 +1,210 @@
-# Repository Template
+# Free and For Sale Web Application
 
-[![Build Status](https://travis-ci.org/cs130-w21/template.svg?branch=master)](https://travis-ci.org/cs130-w21/template)
-[![Release](https://img.shields.io/github/v/release/cs130-w21/template?label=release)](https://github.com/cs130-w21/template/releases/latest)
+[Click here to get started!]()
 
-This repo serves as a template for repositories in this organization. The following information describes how the native features/workflows of Github can be customized to work in a scrum development process.
+## Table of Contents
+* [Overview](#Overview) 
+* [How to user this site](#How-to-user-this-site) 
+* [How our application work](#How-our-application-work)
+* [How to install and deploy](#How-to-install-and-deploy) 
 
-## Issues
+## Overview
+Here at UCLA, students have stuff they wanna buy and sell. Although they can buy and sell in known markets, it is better off finding used items and selling their items to other UCLA students. That way, these items can be put into better use. Therefore, we created a marketplace web application just for UCLA students! In this site, students can find items they wanna buy and/or sell within the campus. This will help UCLA students to find their needs better and sell to the right person, at least to UCLA students who can have more benefit than strangers. 
 
-An issue is a unit of tracking work. Issues can be classified into different classes using [labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels). This can be used to classify issues in the scrum process as follows.
+In this site, users can...
+* Create an account that manages all data, such as
+  * Wishlist
+  * Products that users are trying to sell
+  * Products that users have sold
+* Search through the product catalog with a simple filter by the type of product.
+* Create product post, which gets added to the database
+* Accessing all user's profile, which contains email, phone number, address, etc.
+* A Map UI that has markers of all products within the proximity at UCLA
 
-### Epic
+## How to user this site
 
-An [epic](https://dev.to/jorenrui/a-look-into-how-i-manage-my-personal-projects-my-git-github-workflow-1e7h#epic-issue) is an issue with the label `epic`. It represents a large story that can be broken into stories, which can be addressed over multiple sprints. An epic issue references its story issues as a list in its description. A Github action has been added to automatically check/uncheck the story list items when they get closed/reopened.
+Below will be a step-by-step guide on how to make use of this site.
 
-### Story
+1. Access the page through [here](https://www.google.com) and you will be redirected to the login page.
+    ![alt text](./img/loginPage.png "Login Page")
+2. If you are a new user, you can create an account by just clicking "Create Account", which should redirect to this page:
+    ![alt text](./img/createAccountPage.png "Create Account Page")
+3. Once created, you should get an alert window that says account created, and will redirect you to the home page. If so, then log in to see if your account is created. If so, you should be able to be redirected to the catalog page, which looks like this:
+    ![alt text](./img/catalogInit.png "Catalog Initial Page")
 
-A [story](https://www.atlassian.com/agile/project-management/epics-stories-themes) is an issue with the label `story`. It may represents a new feature, or an enhancement to an existing feature. A story issue can be broken into sub tasks, which are added as a list in the description of the story issue. These sub task items can be checked manually by the developer to indicate completion.
+    for demonstration purposes, you can use the filter button to get the products by the type. Since we have some products in the database, here is what it looks like when users want to retrieve the products that are available by type.
+    ![alt text](./img/catalogFur.png "Catalog Initial Page")
+4. Let's go create a product post now! Click on "Create Product Post" on the navigation bar and you will be redirect to that page. Here, you can add all the description and add an image to the post so that other students can see them.
+    ![alt text](./img/createPost.png "Create Post Page")
+5. We can go back to the catalog and see that our product is available to the public!
+    ![alt text](./img/catalogEle.png "Create Post Page")
+6. We can even look at the post. Just click on the image of the post and you can see all the details, such as product information, seller's information, and even a button to buy or add to your wishlist.
+    ![alt text](./img/productDescExample.png "Product Description Example")
 
-### Bug
+    Here is an example of your own profile, which contains all your information plus the product post you are trying to sell. User can also change profile image from here.
+    ![alt text](./img/profileExample.png "Profile Page Example")
+7. Let's say I want to save an item to my wishlist, and come back later when I decided I want to buy. If you saved the product through the post description and go to your "My Wishlist" in the navigation bar, you can see the item you saved and have the option to remove the item from your wishlist.
+    ![alt text](./img/wishlistExample.png "Profile Page Example")
+8. The last feature we have is the Map UI. Just click on "Map" in the navigation bar, and you will see two buttons. You must click "scan" and then "map", and if that is done in order, then you will a Google Maps UI with all the markers of the product. Click on the marker to see the product details and you can click on it to see the post description. This map UI is there to help students gauge their feasibility if traveling is a concern.
+    ![alt text](./img/mapExample.png "Profile Page Example")
+9. If you want to go buy the item now, just go to the description page and buy the item. If successful, you will redirected to the seller's profile and there you should contact them and notify that you have bought their item and negotiate how you want to pick up the item, and that's it!
 
-A bug is an issue with the label `bug`. It represents a problem with the existing code that needs to be fixed.
+## How our application work
 
-### Question
+Main Dependencies for this application
+  * AWS Dynamo DB
+    * Table data structure in the cloud
+  * AWS S3 Bucket
+    * File upload and download cloud service
+  * Google Maps
+    * API to make Google Maps with our custom markers
 
-A question is an issue with the label `question`. It represents a question raised by any one and that may get converted into other types of issues.
+This sectio, however, will talk about AWS Dynamo DB mostly, since our application use this the most. This is web service that allow us to store all infomation in the cloud. Dynamo DB is like hash maps in many programming languages data structure, except tables do not need to have a predefined attributes. Below is a screenshot of our tables in AWS console we have for this application.
+![alt text](./img/dynamodb.png "Dynamo DB Table in AWS Console")
 
-## Labels
+Below are all the tables and its attributes we use for this application
+* `ProductCatalog`: A table of all product posts
+  * Attributes
+  ```
+  {
+      ProductID (String): Primary Key, product ID,
+      Product (String): Product's name,
+      ProductType (String): Type of the product,
+      UserID (String): Seller's ID,
+      SellerName (String): Seller's name,
+      ImageID (String): Image ID of the product,
+      ImageURL (String): Image URL to be attached to HTML img tag
+      Cost (String): Product's cost,
+      Location (String): Location of the product,
+      Description (String): Description of the product,
+      IsBought (String ["Yes", "No"]): A flag to signify if the item is bought or not
+  }
+  ```
+* `UserCred`: A table of all user's credentials
+  * Attributes
+  ```
+  {
+      Email (String): Primary Key, user's email or also known as username,
+      UserID (String): User's ID,
+      Password (String): User's password
+  }
+  ```
+* `UserInformation`: A table of all user's information
+  * Attributes
+  ```
+  {
+      UserID (String): Primary Key, user's ID,
+      FirstName (String): User's first name,
+      LastName (String): User's last name,
+      Email (String): User's email,
+      PhoneNumber (String): User's phone number,
+      Address (String): User's address,
+      ListofProductIDSelling (List[String]): List of products selling,
+      ListofProductIDSold (List[String]): List of products sold,
+      Wishlist (List[String]): List of product IDs in wishlist
+  }
+  ```
+* `Wishlist`: A table of all users who added the product in their wishlist
+  * Attributes
+  ```
+  {
+      ProductID (String): Primary Key, product's ID,
+      ListOfUsers (List[String]): List of user IDs that has the associated product
+  }
+  ```
 
-In addition to the [standard labels](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/managing-labels#about-default-labels) above, you can add new labels to issues to classify them into different classes like `documentation`, `frontend`, etc, or to add metadata like `duplicate`, `invalid` etc.
+Our application is based on CQRS strutural pattern. Whenever the user wants to get infomation, it will ask a read request to the database. Likewise, if the user wants to change something, such creating account, creating post, updating wishlist, etc., it will ask a write request to the database.
 
-## Milestones
+With this structural pattern, all these read and writes will be called by certain tasks. Thus, our main application is based on Facade design pattern. Whenever someone wants to create a post, we have to write to the database more than one table. Thus, a bunch of tasks is needed for most of actions.
 
-A [milestone](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/tracking-the-progress-of-your-work-with-milestones) groups issues that are expected to be delivered at some point in time. It also allows ordering (prioritizing) theses issues and tracking their progress (percentage of issues completed so far). In the scrum context, a milestone can be used as a sprint. So, you can create your sprints and give them names like Sprint1, Sprint2, etc. and set their due dates respectively.
+Below are a few actions and the order of what happens when it gets triggered
 
-## Projects
+* When a user creates an account
+  1. Create user entry into user information table
+  2. Create user credentials into user cred table
+* When a user creates a post
+  1. Get user information to extract name
+  2. Get S3 Presigned URL and upload image to bucket
+  3. Create new entry and write to Product Catalog Table
+  4. Create Product Wishlist Watch
+  5. Add product ID to user's selling product list
+* When a user wants to add a product to their wishlist
+  1. Get the current wishlist from user's information table
+  2. Get the current wishlist watch from wishlist table
+  3. Add product ID to their wishlist and update that to the user's entry
+  4. Add user's ID to the wishlist watch and update that to the table
+* When a user wants to use the map feature
+  1. Scan all product entry from the product catalog table
+  2. Generate the map, for each product
+    1. Create a marker, attaching its information and a link to that post description
+  3. Add that map into the HTML tag
 
-A [project](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/tracking-the-progress-of-your-work-with-project-boards) is a kanban-style board that can aggregate a set of issues for any purpose. In the scrum context, we can create one project called `Scrum Board` and choose its template to be `Automated kanban with reviews`. (This will create a set of initial notes that you can delete).
+## How to install and deploy
 
-## Branches
-
-The `master` branch (sometimes called the `main` branch) is the main branch used for releases. Other branches can be created too. For example, a branch called `gh-pages` is often used as a website for the repository (for more information check this [link](https://pages.github.com/)). Other branches can be created to address the issues of the repository, one branch per issue (called an `issue` branch). Such branches can then be used to create pull requests, where they get peer reviewed and eventually merged into the `master` branch. For more information on branches, check this [link](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-branches).
-
-## Pull Requests
-
-A [pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-requests) is a request to merge commits from one branch to another. This is typically used to merge commits from an `issue` branch into the `master` branch. A pull request is how the process of peer review is carried. Reviewers can comment on the code changes to show approval or request changes (which will need to be addressed by additional commits to the `issue` branch). When a CI/CD pipeline is configured for a repository (see below), it will run on any `issue` branch that is part of a pull request. When the peer review process has concluded, the new commits can merged into the `master` branch. The recommended merge option to choose is `Squash and merge`, (i.e., squash all commits into a single commit), since it makes the repository's history simpler.
-
-## Tags
-
-Tags can be used to mark release points in a repository's commit history. Typically, after some work goal has been achieved, with a set of commits, a tag (typically a version number like 1.0.0, 1.0.1, etc.) is [pushed to the respository](https://stackoverflow.com/questions/18216991/create-a-tag-in-a-github-repository) to mark this point. This results in the tag showing up in the repository's [tags page](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/viewing-your-repositorys-releases-and-tags).
-
-## Workflows
-
-### Creating issues
-
-An issue can be created from the `issues` tab of a repository. An issue type (bug, story, epic, question) is first chosen then its corresponding template can be sufficiently filled.
-
-### Triaging issues
-
-The Product Owner goes frequently to the `Scrum Board` project and clicks on the `Add Cards` link to triage new issues in the repository to the board's `To do` column, which acts here as the `Product Backlog`. Product Owner can also add unbaked ideas to the `To do` column as notes, which are placeholders that can later be converted into issues (right click to do that). Issues and notes can then be ordered in the `To do` column to show their priorities.
-
-### Planning sprints
-
-The Scrum Master creates a new milestone and gives it a suitable name (e.g., Sprint1) and a due date. Then, in the `Scrum Board`, issues from the top of the `To do` column (assuming they have been ordered based on priority) can be assigned to that milestone and to the developers who will work on them.
-
-### Working on issues
-
-Developers go to the `Scrum Board` where they can filter it for the issues assigned to them in a given milestone. They can pick ones to work on by moving them to the `In progress` column (this is important since this is not automated).
-
-### Reviewing progress
-
-In the daily standup, the `Scrum Master` can review progress by going to the `Scrum Board` and filtering it by the current milestone (sprint). Developers can then reference issues in the various columns when they answer the usual standup questions, e.g., issues they work on (`In progress`), finsihed (`Done`) or yet to work on (`To do`).
-
-### Working with issue branches
-
-Before developers can work on an issue, they should checkout and pull the `master` branch to ensure that they have all the latest commits locally. Then, they should create a new local `issue` branch and name it `issue-[number]` (replacing `[number]` by the issue number). Several `issue` branches can be created concurrently, one for each issue, but it is important to make them independent from each other by checking out the `master` branch before creating each of them. This allows them to be pushed and merged independently from each other (and with the least conflicts).
-
-Each `issue` branch can accumulate commits to address the issue. When ready, it can then be pushed to a corresponding remote branch that can then be used to create a pull request into the `master` branch. The pull request template needs to be filled at this point. Once created, a pull request can be reviewed by a peer reviewer who may request changes. These changes can be made using new commits in the local `issue` branch that can subsequently be pushed to the corresponding remote `issue` branch. When all peer reviews have concluded, the pull request can then be `squash merged` into the `master` branch ([read more here](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits)), and the `issue` branch [can be deleted](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/managing-the-automatic-deletion-of-branches). If the pull request description includes the words `fixes #[number]` (where `[number]` is an issue number), the issue with that number will [automatically be closed](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
-
-> it is recommeded to not push commits to the master branch directly but to always go through a peer review process using an `issue` branch.
-
-### Creating releases
-
-It is recommended to [create periodic releases](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/managing-releases-in-a-repository#creating-a-release) from a repository, at least at the end of each sprint but can be more frequent. These releases should be working versions of the component(s) being developed in the repository. To create such releases, a new tag representing a version number (e.g., 1.0.0) is added to the local `master` branch then pushed to the remote `master` branch. A new release can then be created in Github using this tag.
-
-### Using a CI/CD pipeline
-
-Every repository needs to have a way to build its artifacts headlessly. It is a good idea to run tests as part of such build. Instructions on how to build the components in a repository needs to be documented in the repository's README.md.
-
-A repository can also be setup to build continuously whenever a commit is pushed to the `master` branch by setting up a CI/CD script (e.g., [Travis CI](https://www.travis-ci.com/)) in its root folder. Such script will configure the build environment (as a virtual machine) and invoke the build script on the branch. If the script fails for some reason, the committer will be notified to fix it. It is a good practice to add a build [badge](https://shields.io/category/version) to the README.md file to visibly indicate the status of the last CI/CD build (Travis CI provides such badges). 
-
-The CI/CD script will also be run when a new pull request is created or when more commits are pushed to its linked `issue` branch. Such build assures peer reviewers that the new commits when accepted will not break the build. In fact, a successful CI/CD build can be a prerequisute for peer reviewers to look at the changes.
-
-When a tag is pushed to the `master` branch, the CI/CD script will additionally deliver and/or deploy the built artifact(s). The script can also be configured to create a Github release based on the tag.
+These are the steps on how to run this application locally. Make sure you have the newest version of Node.js installed.
+1. Create your own AWS account (make sure you are in `us-west-1`, or at least in a region you want to work on)
+    1. Create 4 tables called in Dynamo DB
+        1. `ProductCatalog` with primary key `ProductID (String)`
+            * Added Index by going into the catalog, look for "Index" tab, and find "Create Index", and create an index called `ProductType-index`
+        2. `UserCred` with primary key `Email (String)`
+        3. `UserInformation` with primary key `UserID (String)`
+        4. `Wishlist` with primary key `ProductID (String)`
+    2. Create an S3 Buckets called `cs130-bucket`
+    3. Create an IAM Role in AWS that has access to Dynamo and S3
+        * There are two credentials you need to save from this role. Put those down in a file so you wont forget.
+    4. Add these credentials in `cs130-bucket`
+        * Bucket policy
+        ```
+        {
+            "Version": "2012-10-17",
+            "Id": "Policy1645589243219",
+            "Statement": [
+                {
+                    "Sid": "Stmt1645589242328",
+                    "Effect": "Allow",
+                    "Principal": "*",
+                    "Action": "s3:*",
+                    "Resource": "arn:aws:s3:::cs130-bucket/*"
+                }
+            ]
+        }
+        ```
+        * CORS Policy
+        ```
+        [
+            {
+                "AllowedHeaders": [
+                    "*"
+                ],
+                "AllowedMethods": [
+                    "HEAD",
+                    "GET",
+                    "PUT",
+                    "POST",
+                    "DELETE"
+                ],
+                "AllowedOrigins": [
+                    "*"
+                ],
+                "ExposeHeaders": []
+            }
+        ]
+        ```
+    5. Enable ACL in S3 Bucket
+2. Create a role in Google Maps and save the API key somewhere so you won't forget
+3. Clone this repository
+4. Change directory into the repository
+5. Create directory in root called `bundle`
+6. Create `.env` file in root with the following content
+    ```
+    REGION=us-west-1
+    ACCESS_ID=XXXXX
+    ACCESS_KEY=XXXXX
+    ENDPOINT=https://dynamodb.us-west-1.amazonaws.com
+    MAPS_KEY=XXXXX
+    ```
+7. Run command `npm install`
+    * This should create a folder called `node_modules` and should not fail when finished
+8. Run command `npm run build`
+    * If no errors come out when finished, there should be all the bundle files in the bundle folder
+9. Open up `loginPage.html` and you have successfully installed and deployed this application locally and can start testing!
