@@ -13,6 +13,7 @@ var docClient = null;
 
 window.onload = function() {
 	var userID = cookie.getCookie("UserID");
+	userID = "48605a7a85"
 	console.log(userID);
 	if (userID == "") {
 		window.alert("You are not logged in. Redirecting to login page.");

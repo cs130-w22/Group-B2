@@ -26,6 +26,7 @@ var docClientDynamo = null;
 var userID = cookie.getCookie("UserID");
 
 window.onload = function(){
+    userID = "48605a7a85"
     if (userID == "") {
 		window.alert("You are not logged in. Redirecting to login page.");
 		window.location.href = "./loginPage.html";
@@ -67,7 +68,7 @@ async function removePostFromTable(productID, bought){
     const respDynamoRemoveProductToUserSelling = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSelling', newUserSellingProductIDList);
     const respDynamoDeleteProductFromCatalog = await docClientDynamo.deleteProductTableEntry(productID);
 
-    //removeFromWishlists(productID)
+    
     if(bought){
     const userSoldProductIDList = arrayAppend(respDyanmoGetUserEntry.Item['ListofProductIDSold'], productID);
     const respDynamoAddProductToUserSoldList = await docClientDynamo.updateTableEntry('UserInformation', userID, 'ListofProductIDSold', userSoldProductIDList);
@@ -76,6 +77,9 @@ async function removePostFromTable(productID, bought){
             respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Successfully purchased!");
+            if(!removeFromWishlists(productID)){
+                window.alert("error removing product from wishlists")
+            }
             window.location.href = "./myProfile.html"
         } else {
             window.alert("Something went wrong...\n");
@@ -84,6 +88,9 @@ async function removePostFromTable(productID, bought){
         if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Post successfully removed");
+            if(!removeFromWishlists(productID)){
+                window.alert("error removing product from wishlists")
+            }
             window.location.href = "./myProfile.html"
         } else {
             window.alert("Something went wrong...\n");
@@ -94,44 +101,47 @@ async function removePostFromTable(productID, bought){
      
 }
 
-// /**
-//  * Removes product from every user wishlist that has it 
-//  * @param {String} productID Product ID
-//  * @returns void
-//  */
-// async function removeFromWishlists(productID){
-//     const respWishListLookUp = await docClientDynamo.getTableEntry('Wishlist', productID)
-//     const usersWithProductInWishlist = respWishListLookUp.Item['ListOfUsers']
-//     for(let i = 0; i < usersWithProductInWishlist.length; i++){
-//         if(!removeFromSingleWishlist(usersWithProductInWishlist[i], productID)){
-//             window.alert("error removing from a wishlist")
-//         }
-//     }
-//     if (respWishListLookUp['$response']['httpResponse']['statusCode'] != 200){
-//         window.alert("error finding item in wishlist table")
-//     }
-// }
+/**
+ * Removes product from every user wishlist that has it 
+ * @param {String} productID Product ID
+ * @returns Boolean
+ */
+export function removeFromWishlists(productID){
+    const respWishListLookUp = docClientDynamo.getTableEntry('Wishlist', productID)
+    const usersWithProductInWishlist = respWishListLookUp.Item['ListOfUsers']
+    for(let i = 0; i < usersWithProductInWishlist.length; i++){
+        if(!removeFromSingleWishlist(usersWithProductInWishlist[i], productID)){
+            window.alert("error removing from a wishlist")
+            return false 
+        }
+    }
+    if (respWishListLookUp['$response']['httpResponse']['statusCode'] != 200){
+        window.alert("error finding item in wishlist table")
+        return false
+    }
+    return true 
+}
 
-// /**
-//  * Removes product from a specific user ID's wishlist 
-//  * @param {String} userID user id 
-//  * @param {String} productID Product ID
-//  * @returns Boolean
-//  */
-// async function removeFromSingleWishlist(userID, productID){
-//     const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
-//     const wishlistItems = respDyanmoGetUserEntry.Item['Wishlist']
-//     let updatedWishlist = []
-//     for(let i = 0; i < wishlistItems.length; i++){
-//         if(wishlistItems[i] != productID)
-//         arrayAppend(updatedWishlist, wishlistItems[i])
-//     }
-//     const respDynamoUpdatedWishlist = await docClientDynamo.updateTableEntry('UserInformation', userID, 'Wishlist', updatedWishlist);
-//     if (respDynamoUpdatedWishlist['$response']['httpResponse']['statusCode'] == 200){
-//         return true;
-//     }
-//     return false;
-// }
+/**
+ * Removes product from a specific user ID's wishlist 
+ * @param {String} userID user id 
+ * @param {String} productID Product ID
+ * @returns Boolean
+ */
+async function removeFromSingleWishlist(userID, productID){
+    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
+    const wishlistItems = respDyanmoGetUserEntry.Item['Wishlist']
+    let updatedWishlist = []
+    for(let i = 0; i < wishlistItems.length; i++){
+        if(wishlistItems[i] != productID)
+        arrayAppend(updatedWishlist, wishlistItems[i])
+    }
+    const respDynamoUpdatedWishlist = await docClientDynamo.updateTableEntry('UserInformation', userID, 'Wishlist', updatedWishlist);
+    if (respDynamoUpdatedWishlist['$response']['httpResponse']['statusCode'] == 200){
+        return true;
+    }
+    return false;
+}
 
 /**
  * Gets user information from a user's profile in the database 

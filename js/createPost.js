@@ -21,6 +21,7 @@ var docClientDynamo = null;
 var userID = cookie.getCookie("UserID");
 
 window.onload = function() {
+    userID = "48605a7a85"
     if (userID == "") {
 		window.alert("You are not logged in. Redirecting to login page.");
 		window.location.href = "./loginPage.html";

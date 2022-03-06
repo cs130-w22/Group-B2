@@ -5,6 +5,7 @@ import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as cookie from './cookie.js'
 import * as utils from './utils.js'
+import * as myProfile from './myProfile.js'
 
 /**
  * S3 Object
@@ -31,6 +32,7 @@ const urlParams = new URLSearchParams(queryString);
 const productID = urlParams.get('productid');
 
 window.onload = function() {
+   userID = "48605a7a85"
    if (userID == "") {
       window.alert("You are not logged in. Redirecting to login page.");
       window.location.href = "./loginPage.html";
@@ -46,7 +48,7 @@ window.onload = function() {
    let buyButton = document.getElementById("buy");
    let wishlistButton = document.getElementById("addToWishlist");
 
-   buyButton.addEventListener("click", pop);
+   buyButton.addEventListener("click", purchaseProduct);
    wishlistButton.addEventListener("click", addToWishlist);
 } 
 
@@ -84,9 +86,47 @@ async function getPost(){
    //document.getElementById("profile").href = "/myprofile.html?userid=" + userID;
 }
 
-async function pop() {
+async function purchaseProduct() {
    if(confirm("Do you wish to proceed buying the product?")){
-      window.location.href =  "./myprofile.html";
+      // change isBought to yes for product ID
+      const respDyanmoUpdateProductEntry = await docClientDynamo.updateTableEntry('ProductTable', productID, 'isBought', 'yes');
+
+      // remove product ID from all wishlists 
+      const removeFromWishlists = myProfile.removeFromWishlists(productID)
+
+      // get seller ID
+      const respDynamoGetProductTableEntry = await docClientDynamo.getTableEntry('ProductTable', productID);
+      const sellerID = respDynamoGetProductTableEntry.Item['UserID']
+
+      // get seller ListofProductIDSelling && ListofProductIDSold
+      const respDynamoGetSellerEntry = await docClientDynamo.getTableEntry('UserInformation', sellerID)
+      const sellerProductIDSellingList = respDyanmoGetProductEntry.Item['ListofProductIDSelling']
+      let newSellerProductIDSellingList = []
+      let newSellerProductIDSoldList = respDynamoGetProductEntry.Item['ListofProductIDSold']
+
+      // update the lists appropriately 
+      for(let i = 0; i < sellerProductIDSellingList.length; i++){
+         if(sellerProductIDSellingList[i] == productID){
+            utils.arrayAppend(newSellerProductIDSoldList, productID)
+         } else {
+            utils.arrayAppend(newSellerProductIDSellingList, sellerProductIDSellingList[i])
+         }
+      }
+
+      const respDynamoUpdateSellerProductSellingList = await docClientDynamo.updateTableEntry('UserInformation', sellerID, 'ListofProductIDSelling', newSellerProductIDSellingList)
+      const respDynamoUpdateSellerProductSoldList = await docClientDynamo.updateTableEntry('UserInformation', sellerID, 'ListofProductIDSold', newSellerProductIDSoldList)
+
+      // error check
+      if (respDyanmoUpdateProductEntry['$response']['httpResponse']['statusCode'] == 200 && removeFromWishlists 
+         && respDynamoGetSellerEntry['$response']['httpResponse']['statusCode'] == 200 
+         && respDynamoUpdateSellerProductSellingList['$response']['httpResponse']['statusCode'] == 200
+         && respDynamoUpdateSellerProductSoldList['$response']['httpResponse']['statusCode'] == 200){
+            window.alert("Purchase successful")
+            window.location = "./sellerProfile.html?sellerID=" + sellerID
+
+         } else {
+            window.alert("Error purchasing product")
+         }
    }
 }
 
