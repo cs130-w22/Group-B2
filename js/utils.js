@@ -1,5 +1,9 @@
 import * as cookie from './cookie.js'
 
+/**
+ * Logs out by deleting cookies
+ * @returns void
+ */
 export function logout() {
 	cookie.deleteCookie();
 	window.location.href = "./loginPage.html";

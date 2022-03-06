@@ -1,7 +1,6 @@
 /**
  * @file profile page logic 
  */
-import { utils } from "hash.js";
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as utilities from './utils.js'

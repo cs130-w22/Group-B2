@@ -1,3 +1,6 @@
+/**
+ * @file Map logic file
+ */
 import { Dynamo } from "./Dynamo.js"
 import { Loader } from 'google-maps';
 var dotenv = require("dotenv");
@@ -22,6 +25,10 @@ window.onload = function() {
   docClient = new Dynamo();
 }
 
+/**
+ * Scans all entries in product catalog
+ * @returns void
+ */
 async function dynamoScan() {
   const response = await docClient.scanTable("ProductCatalog");
   for (let i =0; i < response.Items.length; i++) {
@@ -35,6 +42,10 @@ async function dynamoScan() {
   }
 }
 
+/**
+ * Initialize map
+ * @returns void
+ */
 async function initMap() {
   const loader = new Loader(process.env.MAPS_KEY);
   var latitude = [];

@@ -21,8 +21,15 @@ var docClientDynamo = null;
  * @type {String}
  */
 const userID = cookie.getCookie("UserID");
-
+/**
+ * Parameters in URL
+ * @type {String}
+ */
 const queryString = window.location.search;
+/**
+ * Parameters parsed in object
+ * @type {Object}
+ */
 const urlParams = new URLSearchParams(queryString);
 /**
  * Product ID
@@ -90,6 +97,10 @@ async function pop() {
    }
 }
 
+/**
+ * Trigger button to add product to wishlist
+ * @returns void
+ */
 async function addToWishlist() {
    if(confirm("Do you wish add this product to your wishlist?")){
       const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);
