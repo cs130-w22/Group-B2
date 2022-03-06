@@ -32,7 +32,7 @@
         <div class="container">
             <div class="name-photo-square" id="userNameSquare">
                 <!--<h2>Joe Bruin</h2>-->
-                <img src="/img/profile_picture.jpg" width="140" height="180"/>
+                <img id="profileImg" width="140" height="180"/>
             </div>
 
             <div class="user-info-square" id="userInfoSquare">
@@ -41,10 +41,8 @@
 
             <div class="upload-photo-buton">
                 <p>Upload a profile photo:</p>
-                <form action="/action_page.php">
                 <input type="file" id="myFile" name="filename"><br> 
-                <input type="submit">
-                </form>
+                <input type="submit" id="submit" accept="image/*" value=" post ">
             </div>
 
         </div>
