@@ -41,7 +41,7 @@ async function onClickFilter() {
 
 		const resp = await docClient.queryTable("ProductCatalog", "ProductType-index", "ProductType", productType.value);
 		divLoading.style.visibility = 'hidden';
-		updateTable(divCatalog, resp.Items);
+		updateTable(divCatalog, resp.Items, false);
 	}
 }
 
@@ -51,7 +51,7 @@ async function onClickFilter() {
  * @param {Object[]} listOfProducts List of all queried products from Dynamo DB
  * @returns void
  */
-export function updateTable(divCatalog, listOfProducts) {
+export function updateTable(divCatalog, listOfProducts, isOwner) {
 	let ulCatalogTag = utils.createTag('ul', null, 'ulCatalog');
 
 	divCatalog.innerHTML = '';
@@ -63,14 +63,24 @@ export function updateTable(divCatalog, listOfProducts) {
 			let divRightTag = utils.createTag('div', null, 'right');
 			let ulProductInfoTag = utils.createTag('ul', null, 'productInfo');
 
-			let info = ["Product: " + item['Product'], 
-						"Seller: " + item['SellerName'], 
-						"Location: " + item['Location'], 
-						"Cost: " + item['Cost']];
 
+			let style = isOwner ? "liStyle2" : "liStyle"; 
+			let info = ["Product: " + item['Product'],
+			"Seller: " + item['SellerName'],
+			"Location: " + item['Location'],
+			"Cost: " + item['Cost']];
+			
 			for (let i = 0; i < info.length; i++) {
-				let liTag = utils.createTag('li', null, "liStyle");
+				let liTag = utils.createTag('li', null, style);
 				liTag.innerHTML = info[i];
+				ulProductInfoTag.appendChild(liTag);
+			}
+
+			if(isOwner){
+				info.push(["Delete item"]);
+				let liTag = utils.createTag("li", null, "liStyle3");
+				liTag.innerHTML = info[info.length - 1];
+				liTag.className = item['ProductID']
 				ulProductInfoTag.appendChild(liTag);
 			}
 

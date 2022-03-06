@@ -137,6 +137,26 @@ section {
   margin: auto;
 }
 
+#liStyle2 {
+  font-size: medium;
+  border-radius: 190px;
+  background: #9eb2f3;
+  border: 5px solid #F2A900;
+  padding: 5px;
+  width: 50%;
+  margin: auto;
+}
+
+#liStyle3{
+  font-size: medium;
+  border-radius: 190px;
+  background: #df8686;
+  border: 5px solid #F2A900;
+  padding: 5px;
+  width: 50%;
+  margin: auto;
+}
+
 #productImage {
   position: relative;
   width: 70%;
