@@ -29,6 +29,9 @@ window.onload = function(){
 		window.alert("You are not logged in. Redirecting to login page.");
 		window.location.href = "./loginPage.html";
 	}
+    let logoutButton = document.getElementById("logout");
+    logoutButton.addEventListener("click", utilities.logout, false);
+    
     docClientDynamo = new Dynamo(); 
     docClientS3 = new S3Bucket(); 
     const response = getUserInfo(userID);

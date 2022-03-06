@@ -1,7 +1,6 @@
 /**
  * @file profile page logic 
  */
-import { utils } from "hash.js";
 import { Dynamo } from "./Dynamo.js"
 import { S3Bucket } from "./S3Bucket.js"
 import * as utilities from './utils.js'
@@ -25,21 +24,24 @@ var docClientDynamo = null;
  */
 
 window.onload = function(){
-if (cookie.getCookie("UserID") == "") {
-    window.alert("You are not logged in. Redirecting to login page.");
-    window.location.href = "./loginPage.html";
-}
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const sellerID = urlParams.get('sellerID');
+    if (cookie.getCookie("UserID") == "") {
+        window.alert("You are not logged in. Redirecting to login page.");
+        window.location.href = "./loginPage.html";
+    }
+    let logoutButton = document.getElementById("logout");
+    logoutButton.addEventListener("click", utilities.logout, false);
+        
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const sellerID = urlParams.get('sellerID');
 
-console.log('hi');
-console.log(sellerID);
+    console.log('hi');
+    console.log(sellerID);
 
-docClientDynamo = new Dynamo(); 
-docClientS3 = new S3Bucket(); 
-const response = getUserInfo(sellerID);
-response.then(result => populateUserData(result));
+    docClientDynamo = new Dynamo(); 
+    docClientS3 = new S3Bucket(); 
+    const response = getUserInfo(sellerID);
+    response.then(result => populateUserData(result));
 } 
 
 /**
