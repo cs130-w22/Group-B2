@@ -67,7 +67,12 @@ async function getPost(){
    document.getElementById("cost").innerHTML = "$" + cost;
    document.getElementById("location").innerHTML = "Location: " + location;
    document.getElementById("product_name").innerHTML = product;
-   document.getElementById("name").innerHTML = "Seller's Name: " + seller;
+
+   let sellerLink = utils.createTag('a', null, null);
+   sellerLink.href = "./sellerProfile.html?sellerID=" + userID;
+   sellerLink.appendChild(document.createTextNode(seller));
+   document.getElementById("name").appendChild(document.createTextNode("Seller's Name: "))
+   document.getElementById("name").appendChild(sellerLink);
    document.getElementById("image").src = image;
    document.getElementById("description").innerHTML = desc;
    const respDyanmoGetUserEntry = await docClientDynamo.getTableEntry('UserInformation', userID);

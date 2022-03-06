@@ -1,0 +1,169 @@
+/*Save UCLA colors in variables*/
+:root {
+    --primary-color: #2D68C4;
+    --secondary-color: #F2A900;
+  }
+  
+  /* Styling UCLA LOGO*/ 
+  h1{
+    font-family: "comic-sans";
+    font-size:50px;
+    color: var(--secondary-color);
+  }
+  .UCLA{
+    color: var(--primary-color);
+  }
+  
+  /*Style body overall*/
+  body {
+    background: #F2F2F2;
+    margin: 0;
+  }
+  
+  /*Set navigation bar to white (done using ID)*/
+  #navigationbar {
+    display: block;
+    width: 100%;
+    height: 1cm;
+    background: white;
+  }
+  /*Style rest navigation bar*/
+  .navbar {
+    padding: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 0;
+    width: 100%;
+  }
+  /*Shift navigation options to the left*/
+  .primary-nav li { 
+    float: left;
+  }
+  /*other navigation bar settings*/
+  .primary-nav li a {
+    display: block;
+    text-decoration: none;
+    background-color: white;
+    color: blue;
+    padding: .1em 1em;
+  }
+  .primary-nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  section {
+    padding: 5em 2m;
+  }
+  
+  /*Profile picture and name section*/
+  .right-col {
+    color: black;
+    font-size: 1.5em;
+  }
+  
+  /*Left section for profile picture and personal information display*/
+  .profile-pic-info-sections {
+    text-align: center;
+    float: left;
+    width: 30%;
+  }
+  
+  .profile-pic-info-sections .container .name-photo-square {
+    margin: 3em 3em 3em 5em;
+  }
+  .profile-pic-info-sections .container .name-photo-square h2 {
+    font-size: 1.3em;
+    width: 90%;
+  }
+  .profile-pic-info-sections .container .user-info-square {
+    margin: 3em 3em 0 5em;
+    position: center;
+    font-size: 1.2em;
+  }
+  
+  /*Section on the left for Posts to be embedded*/
+  .posts-section {
+    margin: 0;
+    padding-left: .1em;
+  }
+  .posts-section li {
+    font-size: 1.1em;
+    margin-bottom: 1em;
+    margin-left: 2em;
+  }
+  .posts-section {
+    margin: 3em 3em 0 5em;
+    width: 320px;
+    padding: 10px;
+    border: 5px solid var(--primary-color);
+    margin: 2;
+    float: right;
+    width: 50%;
+  }
+  
+  #divCatalog {
+    visibility: visible;
+  }
+  #idCatalog {
+    border: 2px solid #F2A900;;
+  }
+  #left {
+    width: 30%; 
+    height: 200px; 
+    float: left; 
+    position: relative;
+  }
+  #right {
+    margin-left: 30%; 
+    height: 200px; 
+  }
+  #productInfo {
+    text-align: center;
+    padding: 15px;
+  }
+  
+  #liStyle {
+    border-radius: 190px;
+    background: #9eb2f3;
+    border: 5px solid #F2A900;
+    padding: 5px;
+    width: 50%;
+    margin: auto;
+  }
+  
+  #productImage {
+    position: relative;
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20%;
+  }
+  
+  input[type=submit] { 
+    background:#2D68C4;
+    color:#fff;
+    border:1pxsolid#eee;
+    border-radius:30px;
+    box-shadow:5px5px5px#eee;
+    text-shadow:none;
+    font-size: 14px;
+    position: center; 
+  }
+  
+  .upload-photo-buton {
+    float: center;
+    position: relative; 
+  }
+  
+  .seller-profile{
+    float:left;
+    color: blue;
+  }
