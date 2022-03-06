@@ -6,6 +6,7 @@ import { S3Bucket } from "./S3Bucket.js"
 import * as utilities from './utils.js'
 import * as cookie from './cookie.js'
 import * as Catalog from "./catalog.js"
+var crypto = require("crypto");
 
 /**
  * S3 Object
@@ -30,10 +31,13 @@ window.onload = function(){
 		window.location.href = "./loginPage.html";
 	}
     let logoutButton = document.getElementById("logout");
+    let uploadButton = document.getElementById("submit");
+
     logoutButton.addEventListener("click", utilities.logout, false);
-    
-    docClientDynamo = new Dynamo(); 
+    uploadButton.addEventListener("click", getPresignedAndUpload, false);
+
     docClientS3 = new S3Bucket(); 
+    docClientDynamo = new Dynamo();
     const response = getUserInfo(userID);
     response.then(result => populateUserData(result));
 } 
@@ -47,6 +51,41 @@ window.onload = function(){
 function arrayAppend(lst, val) {
     lst.push(val);
     return lst.filter(item => item);
+}
+
+/**
+ * API call to generate S3 presigned URL and upload file using PUT request
+ * @param {String} directory Directory to add file to S3
+ * @param {File} image Image file of product
+ * @returns Object[]
+ */
+ async function getPresignedAndUpload() {
+    var image = document.getElementById("myFile").files[0];
+    if (image == undefined) {
+        window.alert("Please upload an image file.");
+    } else {
+        var userImg = crypto.randomBytes(10).toString('hex');
+        const url = await docClientS3.generateURL(userImg);
+        console.log(url);
+        const resp = await fetch(url, {
+            method: "PUT",
+            headers: {
+               "Content-Type": "multipart/form-data"
+            },
+            body: image
+        });
+    
+        const img = url.split('?')[0];
+        
+        const respDynamoUpdate = await docClientDynamo.updateTableEntry("UserInformation", userID, "ImageProfile", img);
+        if (respDynamoUpdate['$response']['httpResponse']['statusCode'] == 200) {
+            window.alert("Uploaded profile image!");
+            const response = getUserInfo(userID);
+            response.then(result => populateUserData(result));
+        } else {
+            window.alert("Something went wrong");
+        }
+    }
 }
 
 /**
@@ -151,8 +190,15 @@ async function getUserInfo(userID){
  * @returns void
  */
 async function populateUserData(result) {
-    result.Item.Address
     let userInfoSquare = document.getElementById("userInfoSquare");
+    let imageProfile = document.getElementById("profileImg");
+    userInfoSquare.innerHTML = '';
+    
+    if (result.Item["ImageProfile"] == undefined) {
+        imageProfile.src = "../img/profile_picture.jpg";
+    } else {
+        imageProfile.src = result.Item["ImageProfile"];
+    }
     
     let p  = utilities.createTag('p', null, null);
     let p2 = utilities.createTag('p', null, null);
