@@ -77,7 +77,7 @@ async function initMap() {
       correctLONG.push(longitude[i]);
 
       contentString[i] = productType[i] + ' ' + product[i] + '. Cost: ' + cost[i] + '. Seller Name: ' + sellerName[i] +
-                        '<p>Post Page: <a href=/postdes.html?productid=' + productID[i] +'>Link</a></p>';
+                        '<p>Post Page: <a href=./postdes.html?productid=' + productID[i] +'>Link</a></p>';
 
       infowindow[i] = new google.maps.InfoWindow({
         content: contentString[i],
