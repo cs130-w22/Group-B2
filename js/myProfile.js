@@ -117,7 +117,7 @@ async function removePostFromTable(productID, bought){
             respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Successfully purchased!");
-            window.location.href = "./myProfile.html"
+            window.location.href = "./myprofile.html"
         } else {
             window.alert("Something went wrong...\n");
         }
@@ -125,7 +125,7 @@ async function removePostFromTable(productID, bought){
         if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Post successfully removed");
-            window.location.href = "./myProfile.html"
+            window.location.href = "./myprofile.html"
         } else {
             window.alert("Something went wrong...\n");
         }
