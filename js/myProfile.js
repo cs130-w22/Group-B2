@@ -117,7 +117,7 @@ async function removePostFromTable(productID, bought){
             respDynamoAddProductToUserSoldList['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Successfully purchased!");
-            window.location.href = "./myProfile.html"
+            window.location.href = "./myprofile.html"
         } else {
             window.alert("Something went wrong...\n");
         }
@@ -125,7 +125,7 @@ async function removePostFromTable(productID, bought){
         if (respDynamoRemoveProductToUserSelling['$response']['httpResponse']['statusCode'] == 200 &&
             respDynamoDeleteProductFromCatalog['$response']['httpResponse']['statusCode'] == 200) {
             window.alert("Post successfully removed");
-            window.location.href = "./myProfile.html"
+            window.location.href = "./myprofile.html"
         } else {
             window.alert("Something went wrong...\n");
         }
@@ -195,7 +195,7 @@ async function populateUserData(result) {
     userInfoSquare.innerHTML = '';
     
     if (result.Item["ImageProfile"] == undefined) {
-        imageProfile.src = "../img/profile_picture.jpg";
+        imageProfile.src = "https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/ccb56d90dfd4f6e.png";
     } else {
         imageProfile.src = result.Item["ImageProfile"];
     }

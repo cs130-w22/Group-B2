@@ -53,7 +53,7 @@ window.onload = function() {
    let buyButton = document.getElementById("buy");
    let wishlistButton = document.getElementById("addToWishlist");
 
-   buyButton.addEventListener("click", pop);
+   buyButton.addEventListener("click", purchaseProduct);
    wishlistButton.addEventListener("click", addToWishlist);
 } 
 
@@ -91,9 +91,20 @@ async function getPost(){
    //document.getElementById("profile").href = "/myprofile.html?userid=" + userID;
 }
 
-async function pop() {
-   if(confirm("Do you wish to proceed buying the product?")){
-      window.location.href =  "./myprofile.html";
+async function purchaseProduct() {
+   if(confirm("Do you wish to proceed buying the product?")) {
+      // change isBought to yes for product ID
+      console.log('8');
+      const respDyanmoUpdateProductEntry = await docClientDynamo.updateTableEntry('ProductCatalog', productID, 'isBought', 'yes');
+      console.log('1');
+      // error check
+      if (respDyanmoUpdateProductEntry['$response']['httpResponse']['statusCode'] == 200) {
+            window.alert("Purchase successful");
+            const respDyanmoGetProductEntry = await docClientDynamo.getTableEntry("ProductCatalog", productID);
+            window.location.href = "./sellerProfile.html?sellerID=" + respDyanmoGetProductEntry.Item['UserID'];
+      } else {
+         window.alert("Error purchasing product")
+      }
    }
 }
 

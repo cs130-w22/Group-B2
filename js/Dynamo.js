@@ -295,7 +295,7 @@ export class Dynamo {
         let params = null;
         if (tableName == "UserInformation") {
             params = this.makeUpdateParamUser(tableName, key, attrName, attrVal);
-        } else if (tableName == "Wishlist"){
+        } else if (tableName == "Wishlist" || tableName == "ProductCatalog"){
             params = this.makeUpdateParamProduct(tableName, key, attrName, attrVal);
         }
 
