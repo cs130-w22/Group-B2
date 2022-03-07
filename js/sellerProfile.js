@@ -107,8 +107,16 @@ async function getUserInfo(userID){
  * @returns void
  */
 async function populateUserData(result) {
-    result.Item.Address
     let userInfoSquare = document.getElementById("userInfoSquare");
+    let imageProfile = document.getElementById("profileImg");
+    userInfoSquare.innerHTML = '';
+    console.log(result.Item["ImageProfile"]);
+
+    if (result.Item["ImageProfile"] == undefined) {
+        imageProfile.src = "https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/ccb56d90dfd4f6e.png";
+    } else {
+        imageProfile.src = result.Item["ImageProfile"];
+    }
     
     let p  = utilities.createTag('p', null, null);
     let p2 = utilities.createTag('p', null, null);

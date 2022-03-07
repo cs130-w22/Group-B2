@@ -195,7 +195,7 @@ async function populateUserData(result) {
     userInfoSquare.innerHTML = '';
     
     if (result.Item["ImageProfile"] == undefined) {
-        imageProfile.src = "../img/profile_picture.jpg";
+        imageProfile.src = "https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/ccb56d90dfd4f6e.png";
     } else {
         imageProfile.src = result.Item["ImageProfile"];
     }
